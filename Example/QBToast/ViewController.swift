@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import QBToast
 
 class ViewController: UIViewController {
 
@@ -14,6 +15,8 @@ class ViewController: UIViewController {
     super.viewDidLoad()
     // Do any additional setup after loading the view, typically from a nib.
     self.view.backgroundColor = .systemBlue
+    let style = QBToastStyle(backgroundColor: .green)
+    print(style)
   }
 
   override func didReceiveMemoryWarning() {
