@@ -1,0 +1,16 @@
+PODS:
+  - QBToast (0.1.0)
+
+DEPENDENCIES:
+  - QBToast (from `../`)
+
+EXTERNAL SOURCES:
+  QBToast:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  QBToast: 65a71b15570d91f8157ecbdc8ada87ca96d0419a
+
+PODFILE CHECKSUM: 09c2db0ae8451c3663b5f983cb4dcabffd339ee7
+
+COCOAPODS: 1.10.1
