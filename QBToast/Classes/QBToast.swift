@@ -33,7 +33,7 @@ extension UIView {
       messageLabel?.text            = message
       messageLabel?.textColor       = style.messageColor
       messageLabel?.font            = style.messageFont
-      messageLabel?.textAlignment   = NSTextAlignment.center
+      messageLabel?.textAlignment   = .left
       messageLabel?.numberOfLines   = style.messageNumberOfLines
       messageLabel?.lineBreakMode   = .byTruncatingTail
       messageLabel?.backgroundColor = .clear
@@ -82,6 +82,13 @@ extension UIView {
     toast.center = startpoint
     toast.alpha = 0
 
+    if QBToastManager.shared.tapToDismissEnabled {
+      let toastRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapToDismiss(_:)))
+      toast.addGestureRecognizer(toastRecognizer)
+      toast.isUserInteractionEnabled = true
+      toast.isExclusiveTouch = true
+    }
+
     self.addSubview(toast)
     UIView.animate(withDuration: QBToastManager.shared.style.fadeDuration,
                    delay: 0.0,
@@ -100,9 +107,14 @@ extension UIView {
     }
   }
 
+  @objc func tapToDismiss(_ recognizer: UIGestureRecognizer) {
+    guard let toast = recognizer.view else { return }
+    self.hide(toast)
+  }
+
   @objc func toastTimer(_ timer: Timer) {
     guard let toast = timer.userInfo as? UIView else { return }
-    hide(toast)
+    self.hide(toast)
   }
 
   private func hide(_ toast: UIView) {
@@ -158,7 +170,7 @@ public struct QBToastStyle {
   public init(
     backgroundColor: UIColor = .black,
     messageColor: UIColor = .white,
-    messageFont: UIFont = .systemFont(ofSize: 16.0),
+    messageFont: UIFont = .systemFont(ofSize: 15.0),
     messageNumberOfLines: Int = 0,
     maxWidthPercentage: CGFloat = 0.8,
     maxHeightPercentage: CGFloat = 0.8,
@@ -167,7 +179,7 @@ public struct QBToastStyle {
     cornerRadius: CGFloat = 4.0,
     fadeDuration: TimeInterval = 0.4
   ) {
-    self.backgroundColor      = backgroundColor.withAlphaComponent(0.7)
+    self.backgroundColor      = backgroundColor.withAlphaComponent(0.86)
     self.messageColor         = messageColor
     self.messageFont          = messageFont
     self.messageNumberOfLines = messageNumberOfLines
@@ -186,7 +198,7 @@ public class QBToastManager {
 
   public var style = QBToastStyle()
 
-  public var duration: TimeInterval = 0.3
+  public var duration: TimeInterval = 3.0
 
   public var position: QBToastPosition = .bottom
 

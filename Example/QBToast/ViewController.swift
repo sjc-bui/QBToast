@@ -15,6 +15,8 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     self.view.backgroundColor = .white
+    self.title = "QBToast iOS"
+
     btn = UIButton()
     btn?.setTitle("Click", for: .normal)
     btn?.titleLabel?.textColor = .white
@@ -43,13 +45,13 @@ class ViewController: UIViewController {
     let style = QBToastStyle(cornerRadius: 12.0)
     switch rand {
       case 1:
-        self.view.showToast(message: "Dispose of any resources that can be recreated.", style: style, duration: 3.0)
+        self.navigationController!.view.showToast(message: "Swiftは、macOS、iOS、watchOS、tvOSのためのパワフルかつ使いやすいプログラミング言語です", style: style, duration: 5.0)
         break
       case 2:
-        self.view.showToast(message: "Objective-C", style: style, position: .top, duration: 3.0)
+        self.navigationController!.view.showToast(message: "Objective-C", style: style, position: .top, duration: 5.0)
         break
       case 3:
-        self.view.showToast(message: "Apple Silicon", style: style, position: .center, duration: 3.0)
+        self.navigationController!.view.showToast(message: "Apple Silicon", style: style, position: .center, duration: 5.0)
         break
       default:
         break
