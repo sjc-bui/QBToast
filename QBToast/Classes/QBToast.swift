@@ -12,17 +12,17 @@ extension UIView {
   public func showToast(message: String?,
                         style: QBToastStyle = QBToastManager.shared.style,
                         position: QBToastPosition = QBToastManager.shared.position,
-                        duration: TimeInterval = QBToastManager.shared.duration) {
+                        duration: TimeInterval = QBToastManager.shared.duration,
+                        state: QBToastState = QBToastManager.shared.state) {
     do {
-      let toast = try createToastView(message: message, style: style)
+      let toast = try createToastView(message: message, style: style, state: state)
       self.show(toast: toast, duration: duration, position: position)
     } catch QBToastError.missingParameters {
       print("Missing parameters")
     } catch { }
   }
 
-  private func createToastView(message: String?, style: QBToastStyle) throws -> UIView {
-
+  private func createToastView(message: String?, style: QBToastStyle, state: QBToastState) throws -> UIView {
     guard message != nil else {
       throw QBToastError.missingParameters
     }
@@ -65,7 +65,18 @@ extension UIView {
                             y: 0.0,
                             width: messageRect.size.width + (style.horizontalPadding * 2),
                             height: messageRect.size.height + (style.verticalPadding * 2))
-    wrapView.backgroundColor = style.backgroundColor
+    switch state {
+      case .success:
+        wrapView.backgroundColor = UIColor(hex: "#5cb85c")
+      case .warning:
+        wrapView.backgroundColor = UIColor(hex: "#f0ad4e")
+      case .error:
+        wrapView.backgroundColor = UIColor(hex: "#d9534f")
+      case .info:
+        wrapView.backgroundColor = UIColor(hex: "#5bc0de")
+      case .custom:
+        wrapView.backgroundColor = style.backgroundColor
+    }
     wrapView.layer.roundCorner(radius: style.cornerRadius)
 
     if let messageLabel = messageLabel {
@@ -144,6 +155,14 @@ private enum QBToastError: Error {
   case missingParameters
 }
 
+public enum QBToastState {
+  case success
+  case warning
+  case error
+  case info
+  case custom
+}
+
 public struct QBToastStyle {
   
   /** Toast view background color. Default `.black(0.8)`*/
@@ -170,7 +189,7 @@ public struct QBToastStyle {
   public init(
     backgroundColor: UIColor = .black,
     messageColor: UIColor = .white,
-    messageFont: UIFont = .systemFont(ofSize: 14.0, weight: .regular),
+    messageFont: UIFont = .systemFont(ofSize: 14.0, weight: .medium),
     messageNumberOfLines: Int = 0,
     maxWidthPercentage: CGFloat = 0.8,
     maxHeightPercentage: CGFloat = 0.8,
@@ -198,6 +217,8 @@ public class QBToastManager {
 
   public var style = QBToastStyle()
 
+  public var state: QBToastState = .custom
+
   public var duration: TimeInterval = 3.0
 
   public var position: QBToastPosition = .bottom
@@ -207,7 +228,7 @@ public class QBToastManager {
   public var inQueueEnabled: Bool = false
 }
 
-public enum QBToastPosition {
+public enum QBToastPosition: CaseIterable {
   case top
   case center
   case bottom
@@ -267,4 +288,18 @@ extension CALayer {
     layer.path = path.cgPath
     self.mask = layer
   }
+}
+
+extension UIColor {
+    /// - Parameter hexString: hex string
+    convenience init(hex hexString: String) {
+        var color: UInt32 = 0
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0
+        if Scanner(string: hexString.replacingOccurrences(of: "#", with: "")).scanHexInt32(&color) {
+            r = CGFloat((color & 0xFF0000) >> 16) / 255.0
+            g = CGFloat((color & 0x00FF00) >>  8) / 255.0
+            b = CGFloat( color & 0x0000FF) / 255.0
+        }
+        self.init(red: r, green: g, blue: b, alpha: 1.0)
+    }
 }
