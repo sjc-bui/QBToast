@@ -9,52 +9,68 @@
 import UIKit
 import QBToast
 
-class ViewController: UIViewController {
+class ViewController: UITableViewController {
+
   var btn: UIButton?
+  let example: [String] = ["top", "center", "bottom"]
+
+  override init(style: UITableView.Style) {
+    super.init(style: style)
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    self.view.backgroundColor = .white
+    self.view.backgroundColor = .groupTableViewBackground
     self.title = "QBToast iOS"
+    self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+    tableView.tableFooterView = UIView()
+  }
+}
 
-    btn = UIButton()
-    btn?.setTitle("Click", for: .normal)
-    btn?.titleLabel?.textColor = .white
-    btn?.backgroundColor = .systemBlue
-    btn?.layer.cornerRadius = 6.0
-    btn?.translatesAutoresizingMaskIntoConstraints = false
-    self.view.addSubview(btn!)
-    btn?.widthAnchor.constraint(equalToConstant: 120).isActive = true
-    btn?.heightAnchor.constraint(equalToConstant: 46).isActive = true
-    btn?.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-    btn?.topAnchor.constraint(equalTo: self.view.topAnchor, constant: self.view.bounds.height - (self.view.bounds.height / 4)).isActive = true
-    btn?.addTarget(self, action: #selector(btnClick), for: .touchUpInside)
+extension ViewController {
+
+  override func numberOfSections(in tableView: UITableView) -> Int {
+    return 1
   }
 
-  var i = 0
-  @objc func btnClick() {
-    i += 1
-    if i > 3 {
-      i = 1
-    }
-    makeToast(i)
-    print(i)
+  override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    return 50
   }
 
-  func makeToast(_ rand: Int) {
-    let style = QBToastStyle(cornerRadius: 12.0)
-    switch rand {
+  override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return 40
+  }
+
+  override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    return "Basic"
+  }
+
+  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return example.count
+  }
+
+  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
+    cell?.textLabel?.text = example[indexPath.row]
+    return cell!
+  }
+
+  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    let style = QBToastStyle(cornerRadius: 8.0)
+    switch indexPath.row {
+      case 0:
+        self.navigationController!.view.showToast(message: "This message appear in top", style: style, position: .top, duration: 5.0)
       case 1:
-        self.navigationController!.view.showToast(message: "Swiftは、macOS、iOS、watchOS、tvOSのためのパワフルかつ使いやすいプログラミング言語です", style: style, duration: 5.0)
-        break
+        self.navigationController!.view.showToast(message: "This message appear in center", style: style, position: .center, duration: 5.0)
       case 2:
-        self.navigationController!.view.showToast(message: "Objective-C", style: style, position: .top, duration: 5.0)
-        break
-      case 3:
-        self.navigationController!.view.showToast(message: "Apple Silicon", style: style, position: .center, duration: 5.0)
-        break
+        self.navigationController!.view.showToast(message: "This message appear in bottom", style: style, duration: 5.0)
       default:
         break
     }
+    tableView.deselectRow(at: indexPath, animated: true)
   }
 }

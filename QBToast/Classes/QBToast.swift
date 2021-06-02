@@ -170,7 +170,7 @@ public struct QBToastStyle {
   public init(
     backgroundColor: UIColor = .black,
     messageColor: UIColor = .white,
-    messageFont: UIFont = .systemFont(ofSize: 15.0),
+    messageFont: UIFont = .systemFont(ofSize: 14.0, weight: .regular),
     messageNumberOfLines: Int = 0,
     maxWidthPercentage: CGFloat = 0.8,
     maxHeightPercentage: CGFloat = 0.8,
