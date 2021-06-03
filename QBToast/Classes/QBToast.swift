@@ -17,14 +17,14 @@ extension UIView {
     do {
       let toast = try createToastView(message: message, style: style, state: state)
       self.show(toast: toast, duration: duration, position: position)
-    } catch QBToastError.missingParameters {
-      print("Missing parameters")
+    } catch QBToastError.messageIsNil {
+      print("Toast message is required!")
     } catch { }
   }
 
   private func createToastView(message: String?, style: QBToastStyle, state: QBToastState) throws -> UIView {
     guard message != nil else {
-      throw QBToastError.missingParameters
+      throw QBToastError.messageIsNil
     }
 
     var messageLabel: UILabel?
@@ -50,8 +50,8 @@ extension UIView {
 
     var messageRect: CGRect = .zero
     if let messageLabel = messageLabel {
-      messageRect.origin.x    = style.horizontalPadding
-      messageRect.origin.y    = style.verticalPadding
+      messageRect.origin.x    = style.toastPadding
+      messageRect.origin.y    = style.toastPadding
       messageRect.size.width  = messageLabel.bounds.size.width
       messageRect.size.height = messageLabel.bounds.size.height
     }
@@ -63,17 +63,17 @@ extension UIView {
                                  .flexibleLeftMargin]
     wrapView.frame = CGRect(x: 0.0,
                             y: 0.0,
-                            width: messageRect.size.width + (style.horizontalPadding * 2),
-                            height: messageRect.size.height + (style.verticalPadding * 2))
+                            width: messageRect.size.width   + (style.toastPadding * 2),
+                            height: messageRect.size.height + (style.toastPadding * 2))
     switch state {
       case .success:
-        wrapView.backgroundColor = UIColor(hex: "#5cb85c")
+        wrapView.backgroundColor = UIColor.success
       case .warning:
-        wrapView.backgroundColor = UIColor(hex: "#f0ad4e")
+        wrapView.backgroundColor = UIColor.warning
       case .error:
-        wrapView.backgroundColor = UIColor(hex: "#d9534f")
+        wrapView.backgroundColor = UIColor.error
       case .info:
-        wrapView.backgroundColor = UIColor(hex: "#5bc0de")
+        wrapView.backgroundColor = UIColor.info
       case .custom:
         wrapView.backgroundColor = style.backgroundColor
     }
@@ -152,7 +152,7 @@ extension UIView {
 }
 
 private enum QBToastError: Error {
-  case missingParameters
+  case messageIsNil
 }
 
 public enum QBToastState {
@@ -164,7 +164,7 @@ public enum QBToastState {
 }
 
 public struct QBToastStyle {
-  
+
   /** Toast view background color. Default `.black(0.8)`*/
   let backgroundColor: UIColor
 
@@ -174,13 +174,13 @@ public struct QBToastStyle {
 
   let messageNumberOfLines: Int
 
+  let messageAlignment: NSTextAlignment
+
   let maxWidthPercentage: CGFloat
 
   let maxHeightPercentage: CGFloat
 
-  let horizontalPadding: CGFloat
-
-  let verticalPadding: CGFloat
+  let toastPadding: CGFloat
 
   let cornerRadius: CGFloat
 
@@ -191,40 +191,46 @@ public struct QBToastStyle {
     messageColor: UIColor = .white,
     messageFont: UIFont = .systemFont(ofSize: 14.0, weight: .medium),
     messageNumberOfLines: Int = 0,
+    messageAlignment: NSTextAlignment = .left,
     maxWidthPercentage: CGFloat = 0.8,
     maxHeightPercentage: CGFloat = 0.8,
-    horizontalPadding: CGFloat = 12.0,
-    verticalPadding: CGFloat = 12.0,
+    toastPadding: CGFloat = 12.0,
     cornerRadius: CGFloat = 4.0,
     fadeDuration: TimeInterval = 0.4
   ) {
-    self.backgroundColor      = backgroundColor.withAlphaComponent(0.86)
+    self.backgroundColor      = backgroundColor.withAlphaComponent(0.9)
     self.messageColor         = messageColor
     self.messageFont          = messageFont
     self.messageNumberOfLines = messageNumberOfLines
+    self.messageAlignment     = messageAlignment
     self.maxWidthPercentage   = maxWidthPercentage
     self.maxHeightPercentage  = maxHeightPercentage
-    self.horizontalPadding    = horizontalPadding
-    self.verticalPadding      = verticalPadding
+    self.toastPadding         = toastPadding
     self.cornerRadius         = cornerRadius
     self.fadeDuration         = fadeDuration
   }
 }
 
 public class QBToastManager {
-
+  /** Singleton instance*/
   public static let shared = QBToastManager()
 
+  /** Toast style*/
   public var style = QBToastStyle()
 
+  /** Toast states: `.success, .warning, .error, .info, .custom` `Default .custom`*/
   public var state: QBToastState = .custom
 
+  /** Display duration `Default 3.0`*/
   public var duration: TimeInterval = 3.0
 
+  /** Toast display position `Default .bottom`*/
   public var position: QBToastPosition = .bottom
 
+  /** Enable tap action to dismiss toast `Default true`*/
   public var tapToDismissEnabled: Bool = true
 
+  /** Display Toast in queue `Not emplementing...`*/
   public var inQueueEnabled: Bool = false
 }
 
@@ -233,11 +239,12 @@ public enum QBToastPosition: CaseIterable {
   case center
   case bottom
 
+  /** `Toast` display in center point*/
   fileprivate func centerPoint(forToastView    toast: UIView,
                                inSuperView superview: UIView) -> CGPoint {
 
-    let topPadding = QBToastManager.shared.style.verticalPadding + superview.safeArea.top
-    let bottomPadding = QBToastManager.shared.style.verticalPadding + superview.safeArea.bottom
+    let topPadding    = QBToastManager.shared.style.toastPadding + superview.safeArea.top
+    let bottomPadding = QBToastManager.shared.style.toastPadding + superview.safeArea.bottom
 
     switch self {
       case .top:
@@ -252,6 +259,7 @@ public enum QBToastPosition: CaseIterable {
     }
   }
 
+  /** `Toast` start animation from start point*/
   fileprivate func startPoint(forToastView toast: UIView,
                               inSuperView superview: UIView) -> CGPoint {
     switch self {
@@ -266,12 +274,6 @@ public enum QBToastPosition: CaseIterable {
                        y: superview.bounds.size.height + toast.frame.size.height)
     }
   }
-}
-
-extension UIApplication {
-    var keyWindowInConnectedScenes: UIWindow? {
-        return windows.first(where: { $0.isKeyWindow })
-    }
 }
 
 private extension UIView {
@@ -291,15 +293,20 @@ extension CALayer {
 }
 
 extension UIColor {
-    /// - Parameter hexString: hex string
-    convenience init(hex hexString: String) {
-        var color: UInt32 = 0
-        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0
-        if Scanner(string: hexString.replacingOccurrences(of: "#", with: "")).scanHexInt32(&color) {
-            r = CGFloat((color & 0xFF0000) >> 16) / 255.0
-            g = CGFloat((color & 0x00FF00) >>  8) / 255.0
-            b = CGFloat( color & 0x0000FF) / 255.0
-        }
-        self.init(red: r, green: g, blue: b, alpha: 1.0)
+  static let success = UIColor(hex: "#5cb85c")
+  static let warning = UIColor(hex: "#f0ad4e")
+  static let error   = UIColor(hex: "#d9534f")
+  static let info    = UIColor(hex: "#5bc0de")
+
+  /// - Parameter hexString: hex string
+  convenience init(hex hexString: String) {
+    var color: UInt32 = 0
+    var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0
+    if Scanner(string: hexString.replacingOccurrences(of: "#", with: "")).scanHexInt32(&color) {
+      r = CGFloat((color & 0xFF0000) >> 16) / 255.0
+      g = CGFloat((color & 0x00FF00) >>  8) / 255.0
+      b = CGFloat( color & 0x0000FF) / 255.0
     }
+    self.init(red: r, green: g, blue: b, alpha: 1.0)
+  }
 }
