@@ -14,7 +14,6 @@ class ViewController: UITableViewController {
   var btn: UIButton?
   let basic: [String] = ["Top", "Center", "Bottom"]
   let states: [String] = ["Success", "Warning", "Error", "Info", "Custom"]
-  let mores: [String] = ["Font size", "Duration"]
   var sections = [[String]]()
 
   let durations: [CGFloat] = [0.5, 1, 2, 5]
@@ -41,7 +40,7 @@ class ViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     self.view.backgroundColor = .groupTableViewBackground
-    sections = [basic, states, mores]
+    sections = [basic, states]
 
     self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Message", style: .plain, target: self, action: #selector(setMessage))
 

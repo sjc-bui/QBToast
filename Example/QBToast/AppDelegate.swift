@@ -18,9 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     UserDefaults.standard.register(defaults: [
       "position": 0,
-      "message": "サンプルメッセージです",
-      "cornerRadius": 4.0,
-      "duration": 1.0
+      "message": "サンプルメッセージです"
     ])
 
     window = UIWindow(frame: UIScreen.main.bounds)
