@@ -1,6 +1,5 @@
 //
 //  QBToast.swift
-//  Pods-QBToast_Example
 //
 //  Copyright (c) 2021 sjc-bui <bui@setjapan.co.jp>
 //

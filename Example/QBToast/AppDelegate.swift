@@ -16,7 +16,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     window = UIWindow(frame: UIScreen.main.bounds)
-    let navigationController = UINavigationController(rootViewController: ViewController(style: .plain))
+    var navigationController: UINavigationController!
+    if #available(iOS 13.0, *) {
+      navigationController = UINavigationController(rootViewController: ViewController(style: .insetGrouped))
+    } else {
+      navigationController = UINavigationController(rootViewController: ViewController(style: .grouped))
+    }
     window?.rootViewController = navigationController
     window?.makeKeyAndVisible()
     return true
