@@ -93,12 +93,14 @@ extension UIView {
       case .custom:
         wrapView.backgroundColor = style.backgroundColor
     }
+
     wrapView.layer.roundCorner(radius: style.cornerRadius)
 
     if let messageLabel = messageLabel {
       messageLabel.frame = messageRect
       wrapView.addSubview(messageLabel)
     }
+
     return wrapView
   }
 
@@ -211,10 +213,10 @@ public struct QBToastStyle {
     maxWidthPercentage: CGFloat = 0.8,
     maxHeightPercentage: CGFloat = 0.8,
     toastPadding: CGFloat = 12.0,
-    cornerRadius: CGFloat = 4.0,
+    cornerRadius: CGFloat = 2.0,
     fadeDuration: TimeInterval = 0.4
   ) {
-    self.backgroundColor      = backgroundColor.withAlphaComponent(0.9)
+    self.backgroundColor      = backgroundColor.withAlphaComponent(0.8)
     self.messageColor         = messageColor
     self.messageFont          = messageFont
     self.messageNumberOfLines = messageNumberOfLines

@@ -22,11 +22,9 @@ TODO: Add long description of the pod here.
                        DESC
 
   s.homepage         = 'https://github.com/sjc-bui/QBToast'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'sjc-bui' => 'bui@setjapan.co.jp' }
   s.source           = { :git => 'https://github.com/sjc-bui/QBToast.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '12.0'
 

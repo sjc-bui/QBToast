@@ -74,30 +74,30 @@ extension ViewController {
   }
 
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    let style = QBToastStyle(cornerRadius: 12.0)
+    let style = QBToastStyle(cornerRadius: 10.0)
     if indexPath.section == 0 {
       switch indexPath.row {
         case 0:
-          self.navigationController!.view.showToast(message: "This message appear in top", style: style, position: .top, duration: 2.0)
+          self.navigationController!.view.showToast(message: "This message appear in top", style: style, position: .top, duration: 1.0)
         case 1:
-          self.navigationController!.view.showToast(message: "This message appear in center", style: style, position: .center, duration: 2.0)
+          self.navigationController!.view.showToast(message: "This message appear in center", style: style, position: .center, duration: 1.0)
         case 2:
-          self.navigationController!.view.showToast(message: "This message appear in bottom", style: style, duration: 2.0)
+          self.navigationController!.view.showToast(message: "This message appear in bottom", style: style, duration: 1.0)
         default:
           break
       }
     } else {
       switch indexPath.row {
         case 0:
-          self.navigationController!.view.showToast(message: "Display successfully", style: style, duration: 1.0, state: .success)
+          self.navigationController!.view.showToast(message: "Display successfully", style: style, position: .center, duration: 1.0, state: .success)
         case 1:
-          self.navigationController!.view.showToast(message: "A warning occured", style: style, duration: 1.0, state: .warning)
+          self.navigationController!.view.showToast(message: "A warning occured", style: style, position: .center,duration: 1.0, state: .warning)
         case 2:
-          self.navigationController!.view.showToast(message: "Error message", style: style, duration: 1.0, state: .error)
+          self.navigationController!.view.showToast(message: "Error message", style: style, position: .center, duration: 1.0, state: .error)
         case 3:
-          self.navigationController!.view.showToast(message: "Some information", style: style, duration: 1.0, state: .info)
+          self.navigationController!.view.showToast(message: "Some information", style: style, position: .center, duration: 1.0, state: .info)
         case 4:
-          self.navigationController!.view.showToast(message: "Default toast message", style: style, duration: 1.0, state: .custom)
+          self.navigationController!.view.showToast(message: "Default toast message", style: style, position: .center, duration: 1.0, state: .custom)
         default:
           break
       }
