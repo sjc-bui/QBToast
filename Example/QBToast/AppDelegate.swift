@@ -15,6 +15,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+
+    UserDefaults.standard.register(defaults: [
+      "position": 0,
+      "message": "サンプルメッセージです",
+      "cornerRadius": 4.0,
+      "duration": 1.0
+    ])
+
     window = UIWindow(frame: UIScreen.main.bounds)
     var navigationController: UINavigationController!
     if #available(iOS 13.0, *) {

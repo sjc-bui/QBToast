@@ -252,10 +252,10 @@ public class QBToastManager {
   public var inQueueEnabled: Bool = false
 }
 
-public enum QBToastPosition: CaseIterable {
-  case top
-  case center
-  case bottom
+public enum QBToastPosition: Int, CaseIterable {
+  case top    = 0
+  case center = 1
+  case bottom = 2
 
   /** `Toast` display in center point*/
   fileprivate func centerPoint(forToastView    toast: UIView,

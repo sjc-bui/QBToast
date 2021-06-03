@@ -14,10 +14,19 @@ class ViewController: UITableViewController {
   var btn: UIButton?
   let basic: [String] = ["Top", "Center", "Bottom"]
   let states: [String] = ["Success", "Warning", "Error", "Info", "Custom"]
+  let mores: [String] = ["Font size", "Duration"]
   var sections = [[String]]()
+
+  let durations: [CGFloat] = [0.5, 1, 2, 5]
+  let fontSizes: [Int] = [12, 14, 18, 20, 25]
 
   fileprivate struct ReuseIdentifier {
     static let cell = "cellId"
+  }
+
+  fileprivate struct ReuseStr {
+    static let position = "position"
+    static let message  = "message"
   }
 
   override init(style: UITableView.Style) {
@@ -32,10 +41,29 @@ class ViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     self.view.backgroundColor = .groupTableViewBackground
-    sections = [basic, states]
+    sections = [basic, states, mores]
+
+    self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Message", style: .plain, target: self, action: #selector(setMessage))
 
     self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseIdentifier.cell)
     tableView.tableFooterView = UIView()
+  }
+
+  @objc func setMessage() {
+    let alert = UIAlertController(title: "Set toast message", message: nil, preferredStyle: .alert)
+    alert.addTextField { textField in
+      textField.text = UserDefaults.standard.string(forKey: ReuseStr.message)
+    }
+    let ok = UIAlertAction(title: "Save", style: .default) { _ in
+      let message = alert.textFields![0] as UITextField
+      UserDefaults.standard.set(message.text, forKey: ReuseStr.message)
+    }
+    let cancel = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+      self.dismiss(animated: true, completion: nil)
+    }
+    alert.addAction(ok)
+    alert.addAction(cancel)
+    self.present(alert, animated: true, completion: nil)
   }
 }
 
@@ -55,9 +83,11 @@ extension ViewController {
 
   override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
     if section == 0 {
-      return "Basic"
+      return "Position"
+    } else if section == 1 {
+      return "States"
     }
-    return "States"
+    return "More"
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -70,34 +100,47 @@ extension ViewController {
       cell = UITableViewCell(style: .default, reuseIdentifier: ReuseIdentifier.cell)
     }
     cell?.textLabel?.text = sections[indexPath.section][indexPath.row]
+    if indexPath.section == 0 && indexPath.row == UserDefaults.standard.integer(forKey: ReuseStr.position) {
+      cell?.accessoryType = .checkmark
+    }
     return cell!
   }
 
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let style = QBToastStyle(cornerRadius: 10.0)
+    let prevIndex = UserDefaults.standard.integer(forKey: ReuseStr.position)
+
     if indexPath.section == 0 {
-      switch indexPath.row {
+      if prevIndex != indexPath.row {
+        tableView.cellForRow(at: IndexPath(row: prevIndex, section: indexPath.section))?.accessoryType = .none
+        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+        UserDefaults.standard.set(indexPath.row, forKey: ReuseStr.position)
+      }
+    } else if indexPath.section == 1 {
+      var pos: QBToastPosition!
+      switch prevIndex {
         case 0:
-          self.navigationController!.view.showToast(message: "This message appear in top", style: style, position: .top, duration: 1.0)
+          pos = .top
         case 1:
-          self.navigationController!.view.showToast(message: "This message appear in center", style: style, position: .center, duration: 1.0)
+          pos = .center
         case 2:
-          self.navigationController!.view.showToast(message: "This message appear in bottom", style: style, duration: 1.0)
+          pos = .bottom
         default:
           break
       }
-    } else {
+
+      let message = UserDefaults.standard.string(forKey: ReuseStr.message)
       switch indexPath.row {
         case 0:
-          self.navigationController!.view.showToast(message: "Display successfully", style: style, position: .center, duration: 1.0, state: .success)
+          self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: 1.0, state: .success)
         case 1:
-          self.navigationController!.view.showToast(message: "A warning occured", style: style, position: .center,duration: 1.0, state: .warning)
+          self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: 1.0, state: .warning)
         case 2:
-          self.navigationController!.view.showToast(message: "Error message", style: style, position: .center, duration: 1.0, state: .error)
+          self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: 1.0, state: .error)
         case 3:
-          self.navigationController!.view.showToast(message: "Some information", style: style, position: .center, duration: 1.0, state: .info)
+          self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: 1.0, state: .info)
         case 4:
-          self.navigationController!.view.showToast(message: "Default toast message", style: style, position: .center, duration: 1.0, state: .custom)
+          self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: 1.0, state: .custom)
         default:
           break
       }
