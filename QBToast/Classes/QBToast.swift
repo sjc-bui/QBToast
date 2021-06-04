@@ -186,22 +186,29 @@ public struct QBToastStyle {
   /** Toast view background color. Default `.black(0.8)`*/
   let backgroundColor: UIColor
 
+  /** Toast message color*/
   let messageColor: UIColor
 
+  /** Toast message font*/
   let messageFont: UIFont
 
+  /** Toast message number of lines*/
   let messageNumberOfLines: Int
 
+  /** Toast message alignment*/
   let messageAlignment: NSTextAlignment
 
   let maxWidthPercentage: CGFloat
 
   let maxHeightPercentage: CGFloat
 
+  /** Toast message padding*/
   let toastPadding: CGFloat
 
+  /** Corner radius of Toast View*/
   let cornerRadius: CGFloat
 
+  /** Toast appear, disappear duration*/
   let fadeDuration: TimeInterval
 
   public init(
@@ -295,12 +302,18 @@ public enum QBToastPosition: Int, CaseIterable {
 }
 
 private extension UIView {
+  /**
+   Get safeAreaInsets
+   */
   var safeArea: UIEdgeInsets {
     return UIApplication.shared.delegate?.window??.safeAreaInsets ?? .zero
   }
 }
 
 extension CALayer {
+  /**
+   Round smooth corner for UIView
+   */
   func roundCorner(radius: CGFloat) {
     let path = UIBezierPath(roundedRect: self.bounds,
                             cornerRadius: radius)

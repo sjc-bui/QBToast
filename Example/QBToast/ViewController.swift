@@ -17,9 +17,6 @@ class ViewController: UITableViewController {
   let mores: [String] = ["Duration", "Tap to dismiss"]
   var sections = [[String]]()
 
-  let durations: [CGFloat] = [0.5, 1, 2, 5]
-  let fontSizes: [Int] = [12, 14, 18, 20, 25]
-
   let userDefaults = UserDefaults.standard
 
   fileprivate struct ReuseIdentifier {
