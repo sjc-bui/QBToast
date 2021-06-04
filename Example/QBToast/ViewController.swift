@@ -150,23 +150,23 @@ extension ViewController {
       switch indexPath.row {
         case 0:
           QBToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .success).showToast { bol in
-            print(bol)
+            self.status(bol)
           }
         case 1:
           QBToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .warning).showToast { bol in
-            print(bol)
+            self.status(bol)
           }
         case 2:
           QBToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .error).showToast { bol in
-            print(bol)
+            self.status(bol)
           }
         case 3:
           QBToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .info).showToast { bol in
-            print(bol)
+            self.status(bol)
           }
         case 4:
           QBToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .custom).showToast { bol in
-            print(bol)
+            self.status(bol)
           }
         default:
           break
@@ -189,5 +189,9 @@ extension ViewController {
       tableView.reloadRows(at: [index], with: .automatic)
     }
     tableView.deselectRow(at: indexPath, animated: true)
+  }
+
+  private func status(_ byTap: Bool) {
+    print(byTap ? "tapped" : "time out")
   }
 }

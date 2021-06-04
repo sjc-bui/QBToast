@@ -22,6 +22,7 @@
 //  THE SOFTWARE.
 
 import UIKit
+import ObjectiveC
 
 public class QBToast: UIViewController {
   let message: String?
@@ -32,6 +33,10 @@ public class QBToast: UIViewController {
 
   public typealias QBToastCompletion = ((Bool) -> Void)?
   var completionHandler: QBToastCompletion = nil
+
+  private struct QBToastKey {
+    static var timer = "timer"
+  }
 
   public init(message: String?,
               style: QBToastStyle = QBToastManager.shared.style,
@@ -162,6 +167,7 @@ public class QBToast: UIViewController {
                         userInfo: toast,
                         repeats: false)
       RunLoop.main.add(timer, forMode: .common)
+      objc_setAssociatedObject(toast, &QBToastKey.timer, timer, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
   }
 
@@ -178,6 +184,9 @@ public class QBToast: UIViewController {
   /** Hide Toast view*/
   private func hide(_ toast: UIView, byTap: Bool = false) {
     guard let window = UIApplication.shared.keyWindow else { return }
+    if let timer = objc_getAssociatedObject(toast, &QBToastKey.timer) as? Timer {
+      timer.invalidate()
+    }
     var currentPoint = toast.center
     let centerYPoint = window.bounds.size.height / 2
 
