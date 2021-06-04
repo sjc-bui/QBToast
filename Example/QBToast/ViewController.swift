@@ -20,6 +20,8 @@ class ViewController: UITableViewController {
   let durations: [CGFloat] = [0.5, 1, 2, 5]
   let fontSizes: [Int] = [12, 14, 18, 20, 25]
 
+  let userDefaults = UserDefaults.standard
+
   fileprivate struct ReuseIdentifier {
     static let cell = "cellId"
     static let cellValue1 = "cellVal1"
@@ -44,7 +46,7 @@ class ViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     self.view.backgroundColor = .groupTableViewBackground
-    QBToastManager.shared.tapToDismissEnabled = UserDefaults.standard.bool(forKey: ReuseStr.tapEnabled)
+    QBToastManager.shared.tapToDismissEnabled = userDefaults.bool(forKey: ReuseStr.tapEnabled)
     sections = [basic, states, mores]
 
     self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Message", style: .plain, target: self, action: #selector(setMessage))
@@ -56,11 +58,11 @@ class ViewController: UITableViewController {
   @objc func setMessage() {
     let alert = UIAlertController(title: "Set toast message", message: nil, preferredStyle: .alert)
     alert.addTextField { textField in
-      textField.text = UserDefaults.standard.string(forKey: ReuseStr.message)
+      textField.text = self.userDefaults.string(forKey: ReuseStr.message)
     }
     let ok = UIAlertAction(title: "Save", style: .default) { _ in
       let message = alert.textFields![0] as UITextField
-      UserDefaults.standard.set(message.text, forKey: ReuseStr.message)
+      self.userDefaults.set(message.text, forKey: ReuseStr.message)
     }
     let cancel = UIAlertAction(title: "Cancel", style: .cancel) { _ in
       self.dismiss(animated: true, completion: nil)
@@ -107,29 +109,30 @@ extension ViewController {
       cell = UITableViewCell(style: .value1, reuseIdentifier: ReuseIdentifier.cellValue1)
       switch indexPath.row {
         case 0:
-          cell?.detailTextLabel?.text = "\(UserDefaults.standard.float(forKey: ReuseStr.duration))"
+          cell?.detailTextLabel?.text = "\(userDefaults.float(forKey: ReuseStr.duration))"
         case 1:
-          cell?.detailTextLabel?.text = UserDefaults.standard.bool(forKey: ReuseStr.tapEnabled) ? "Enabled" : "Disabled"
+          cell?.detailTextLabel?.text = userDefaults.bool(forKey: ReuseStr.tapEnabled) ? "Enabled" : "Disabled"
         default:
           break
       }
     }
     cell?.textLabel?.text = sections[indexPath.section][indexPath.row]
-    if indexPath.section == 0 && indexPath.row == UserDefaults.standard.integer(forKey: ReuseStr.position) {
+    if indexPath.section == 0 && indexPath.row == userDefaults.integer(forKey: ReuseStr.position) {
       cell?.accessoryType = .checkmark
     }
     return cell!
   }
 
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    let style = QBToastStyle(cornerRadius: 10.0)
-    let prevIndex = UserDefaults.standard.integer(forKey: ReuseStr.position)
+
+    let style = QBToastStyle(cornerRadius: 12.0)
+    let prevIndex = userDefaults.integer(forKey: ReuseStr.position)
 
     if indexPath.section == 0 {
       if prevIndex != indexPath.row {
         tableView.cellForRow(at: IndexPath(row: prevIndex, section: indexPath.section))?.accessoryType = .none
         tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        UserDefaults.standard.set(indexPath.row, forKey: ReuseStr.position)
+        userDefaults.set(indexPath.row, forKey: ReuseStr.position)
       }
     } else if indexPath.section == 1 {
       var pos: QBToastPosition!
@@ -144,8 +147,9 @@ extension ViewController {
           break
       }
 
-      let message = UserDefaults.standard.string(forKey: ReuseStr.message)
-      let duration = UserDefaults.standard.float(forKey: ReuseStr.duration)
+      let message = userDefaults.string(forKey: ReuseStr.message)
+      let duration = userDefaults.float(forKey: ReuseStr.duration)
+
       switch indexPath.row {
         case 0:
           self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .success)
@@ -163,14 +167,14 @@ extension ViewController {
     } else if indexPath.section == 2 {
       switch indexPath.row {
         case 0:
-          var duration: Float = UserDefaults.standard.float(forKey: ReuseStr.duration)
+          var duration: Float = userDefaults.float(forKey: ReuseStr.duration)
           duration += 0.5
           if duration > 5.0 { duration = 0.5 }
-          UserDefaults.standard.set(duration, forKey: ReuseStr.duration)
+          userDefaults.set(duration, forKey: ReuseStr.duration)
         case 1:
-          let isEnabled = UserDefaults.standard.bool(forKey: ReuseStr.tapEnabled)
+          let isEnabled = userDefaults.bool(forKey: ReuseStr.tapEnabled)
           QBToastManager.shared.tapToDismissEnabled = !isEnabled
-          UserDefaults.standard.set(!isEnabled, forKey: ReuseStr.tapEnabled)
+          userDefaults.set(!isEnabled, forKey: ReuseStr.tapEnabled)
         default:
           break
       }
