@@ -24,14 +24,16 @@
 import UIKit
 import ObjectiveC
 
+public typealias QBToastCompletion = ((Bool) -> Void)?
+
 public class QBToast: UIViewController {
+
   let message: String?
   let style: QBToastStyle!
   let position: QBToastPosition
   let duration: TimeInterval
   let state: QBToastState
 
-  public typealias QBToastCompletion = ((Bool) -> Void)?
   var completionHandler: QBToastCompletion = nil
 
   private struct QBToastKey {
