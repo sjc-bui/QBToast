@@ -14,6 +14,7 @@ class ViewController: UITableViewController {
   var btn: UIButton?
   let basic: [String] = ["Top", "Center", "Bottom"]
   let states: [String] = ["Success", "Warning", "Error", "Info", "Custom"]
+  let mores: [String] = ["Duration", "Tap to dismiss"]
   var sections = [[String]]()
 
   let durations: [CGFloat] = [0.5, 1, 2, 5]
@@ -21,11 +22,14 @@ class ViewController: UITableViewController {
 
   fileprivate struct ReuseIdentifier {
     static let cell = "cellId"
+    static let cellValue1 = "cellVal1"
   }
 
   fileprivate struct ReuseStr {
     static let position = "position"
     static let message  = "message"
+    static let duration = "duration"
+    static let tapEnabled = "tapEnabled"
   }
 
   override init(style: UITableView.Style) {
@@ -40,7 +44,8 @@ class ViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     self.view.backgroundColor = .groupTableViewBackground
-    sections = [basic, states]
+    QBToastManager.shared.tapToDismissEnabled = UserDefaults.standard.bool(forKey: ReuseStr.tapEnabled)
+    sections = [basic, states, mores]
 
     self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Message", style: .plain, target: self, action: #selector(setMessage))
 
@@ -98,6 +103,17 @@ extension ViewController {
     if cell == nil {
       cell = UITableViewCell(style: .default, reuseIdentifier: ReuseIdentifier.cell)
     }
+    if (indexPath.section == 2) {
+      cell = UITableViewCell(style: .value1, reuseIdentifier: ReuseIdentifier.cellValue1)
+      switch indexPath.row {
+        case 0:
+          cell?.detailTextLabel?.text = "\(UserDefaults.standard.float(forKey: ReuseStr.duration))"
+        case 1:
+          cell?.detailTextLabel?.text = UserDefaults.standard.bool(forKey: ReuseStr.tapEnabled) ? "Enabled" : "Disabled"
+        default:
+          break
+      }
+    }
     cell?.textLabel?.text = sections[indexPath.section][indexPath.row]
     if indexPath.section == 0 && indexPath.row == UserDefaults.standard.integer(forKey: ReuseStr.position) {
       cell?.accessoryType = .checkmark
@@ -129,20 +145,37 @@ extension ViewController {
       }
 
       let message = UserDefaults.standard.string(forKey: ReuseStr.message)
+      let duration = UserDefaults.standard.float(forKey: ReuseStr.duration)
       switch indexPath.row {
         case 0:
-          self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: 1.0, state: .success)
+          self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .success)
         case 1:
-          self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: 1.0, state: .warning)
+          self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .warning)
         case 2:
-          self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: 1.0, state: .error)
+          self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .error)
         case 3:
-          self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: 1.0, state: .info)
+          self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .info)
         case 4:
-          self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: 1.0, state: .custom)
+          self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .custom)
         default:
           break
       }
+    } else if indexPath.section == 2 {
+      switch indexPath.row {
+        case 0:
+          var duration: Float = UserDefaults.standard.float(forKey: ReuseStr.duration)
+          duration += 0.5
+          if duration > 5.0 { duration = 0.5 }
+          UserDefaults.standard.set(duration, forKey: ReuseStr.duration)
+        case 1:
+          let isEnabled = UserDefaults.standard.bool(forKey: ReuseStr.tapEnabled)
+          QBToastManager.shared.tapToDismissEnabled = !isEnabled
+          UserDefaults.standard.set(!isEnabled, forKey: ReuseStr.tapEnabled)
+        default:
+          break
+      }
+      let index = IndexPath(item: indexPath.row, section: indexPath.section)
+      tableView.reloadRows(at: [index], with: .automatic)
     }
     tableView.deselectRow(at: indexPath, animated: true)
   }

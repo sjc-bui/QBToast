@@ -18,7 +18,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     UserDefaults.standard.register(defaults: [
       "position": 0,
-      "message": "サンプルメッセージです"
+      "message": "サンプルメッセージです",
+      "duration": 0.5,
+      "tapEnabled": true
     ])
 
     window = UIWindow(frame: UIScreen.main.bounds)
