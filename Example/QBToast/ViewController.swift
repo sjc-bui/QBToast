@@ -149,15 +149,25 @@ extension ViewController {
 
       switch indexPath.row {
         case 0:
-          self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .success)
+          QBToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .success).showToast { bol in
+            print(bol)
+          }
         case 1:
-          self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .warning)
+          QBToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .warning).showToast { bol in
+            print(bol)
+          }
         case 2:
-          self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .error)
+          QBToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .error).showToast { bol in
+            print(bol)
+          }
         case 3:
-          self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .info)
+          QBToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .info).showToast { bol in
+            print(bol)
+          }
         case 4:
-          self.navigationController!.view.showToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .custom)
+          QBToast(message: message, style: style, position: pos, duration: TimeInterval(duration), state: .custom).showToast { bol in
+            print(bol)
+          }
         default:
           break
       }

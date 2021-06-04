@@ -23,22 +23,48 @@
 
 import UIKit
 
-extension UIView {
+public class QBToast: UIViewController {
+  let message: String?
+  let style: QBToastStyle!
+  let position: QBToastPosition
+  let duration: TimeInterval
+  let state: QBToastState
 
-  public func showToast(message: String?,
-                        style: QBToastStyle = QBToastManager.shared.style,
-                        position: QBToastPosition = QBToastManager.shared.position,
-                        duration: TimeInterval = QBToastManager.shared.duration,
-                        state: QBToastState = QBToastManager.shared.state) {
+  public typealias QBToastCompletion = ((Bool) -> Void)?
+  var completionHandler: QBToastCompletion = nil
+
+  public init(message: String?,
+              style: QBToastStyle = QBToastManager.shared.style,
+              position: QBToastPosition = QBToastManager.shared.position,
+              duration: TimeInterval = QBToastManager.shared.duration,
+              state: QBToastState = QBToastManager.shared.state) {
+    self.message  = message
+    self.style    = style
+    self.position = position
+    self.duration = duration
+    self.state    = state
+    super.init(nibName: nil, bundle: nil)
+  }
+
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  public func showToast(completionHandler: QBToastCompletion = nil) {
     do {
-      let toast = try createToastView(message: message, style: style, state: state)
-      self.show(toast: toast, duration: duration, position: position)
+      guard let window = UIApplication.shared.keyWindow else { return }
+      let toast = try createToastView(message: message, style: style, state: state, window: window)
+      self.completionHandler = completionHandler
+      self.show(toast: toast, duration: duration, position: position, window: window)
     } catch QBToastError.messageIsNil {
       print("Toast message is required!")
     } catch { }
   }
 
-  private func createToastView(message: String?, style: QBToastStyle, state: QBToastState) throws -> UIView {
+  private func createToastView(message: String?,
+                               style: QBToastStyle,
+                               state: QBToastState,
+                               window: UIWindow) throws -> UIView {
     guard message != nil else {
       throw QBToastError.messageIsNil
     }
@@ -54,8 +80,8 @@ extension UIView {
       messageLabel?.lineBreakMode   = .byTruncatingTail
       messageLabel?.backgroundColor = .clear
 
-      let maxSize = CGSize(width : self.bounds.size.width  * style.maxWidthPercentage,
-                           height: self.bounds.size.height * style.maxHeightPercentage)
+      let maxSize = CGSize(width : window.bounds.size.width  * style.maxWidthPercentage,
+                           height: window.bounds.size.height * style.maxHeightPercentage)
       let messageSize = messageLabel?.sizeThatFits(maxSize)
       if let messageSize = messageSize {
         let actualWidth  = min(messageSize.width , maxSize.width)
@@ -104,9 +130,12 @@ extension UIView {
     return wrapView
   }
 
-  private func show(toast: UIView, duration: TimeInterval, position: QBToastPosition) {
-    let startpoint = position.startPoint(forToastView: toast, inSuperView: self)
-    let point = position.centerPoint(forToastView: toast, inSuperView: self)
+  private func show(toast: UIView,
+                    duration: TimeInterval,
+                    position: QBToastPosition,
+                    window: UIWindow) {
+    let startpoint = position.startPoint(forToastView: toast, inSuperView: window)
+    let point = position.centerPoint(forToastView: toast, inSuperView: window)
 
     toast.center = startpoint
     toast.alpha = 0
@@ -118,7 +147,7 @@ extension UIView {
       toast.isExclusiveTouch = true
     }
 
-    self.addSubview(toast)
+    window.addSubview(toast)
     UIView.animate(withDuration: QBToastManager.shared.style.fadeDuration,
                    delay: 0.0,
                    usingSpringWithDamping: 0.8,
@@ -138,7 +167,7 @@ extension UIView {
 
   @objc func tapToDismiss(_ recognizer: UIGestureRecognizer) {
     guard let toast = recognizer.view else { return }
-    self.hide(toast)
+    self.hide(toast, byTap: true)
   }
 
   @objc func toastTimer(_ timer: Timer) {
@@ -146,9 +175,11 @@ extension UIView {
     self.hide(toast)
   }
 
-  private func hide(_ toast: UIView) {
+  /** Hide Toast view*/
+  private func hide(_ toast: UIView, byTap: Bool = false) {
+    guard let window = UIApplication.shared.keyWindow else { return }
     var currentPoint = toast.center
-    let centerYPoint = self.bounds.size.height / 2
+    let centerYPoint = window.bounds.size.height / 2
 
     if currentPoint.y > centerYPoint {
       currentPoint.y += (toast.frame.size.height * 2)
@@ -165,6 +196,7 @@ extension UIView {
       toast.center = currentPoint
     } completion: { _ in
       toast.removeFromSuperview()
+      self.completionHandler?(byTap)
     }
   }
 }
