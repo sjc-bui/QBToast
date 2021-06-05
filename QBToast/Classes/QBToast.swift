@@ -38,6 +38,10 @@ public class QBToast: UIViewController {
 
   private struct QBToastKey {
     static var timer = "timer"
+    static var queue = "queue"
+    static var start = "start"
+    static var end = "end"
+    static var active = "active"
   }
 
   public init(message: String?,
@@ -57,12 +61,47 @@ public class QBToast: UIViewController {
     fatalError("init(coder:) has not been implemented")
   }
 
+  // Toast message queue
+  private var queue: NSMutableArray {
+    get {
+      if let queue = objc_getAssociatedObject(UIView.self, &QBToastKey.queue) as? NSMutableArray {
+        return queue
+      } else {
+        let queue = NSMutableArray()
+        objc_setAssociatedObject(UIView.self, &QBToastKey.queue, queue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return queue
+      }
+    }
+  }
+
+  private var activeToasts: NSMutableArray {
+    get {
+      if let activeToasts = objc_getAssociatedObject(UIView.self, &QBToastKey.active) as? NSMutableArray {
+        return activeToasts
+      } else {
+        let activeToasts = NSMutableArray()
+        objc_setAssociatedObject(UIView.self, &QBToastKey.active, queue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return activeToasts
+      }
+    }
+  }
+
   public func showToast(completionHandler: QBToastCompletion = nil) {
     do {
       guard let window = UIApplication.shared.keyWindow else { return }
       let toast = try createToastView(message: message, style: style, state: state, window: window)
       self.completionHandler = completionHandler
-      self.show(toast: toast, duration: duration, position: position, window: window)
+
+      let startpoint = position.startPoint(forToastView: toast, inSuperView: window)
+      let point = position.centerPoint(forToastView: toast, inSuperView: window)
+      if QBToastManager.shared.inQueueEnabled,
+         activeToasts.count > 0 {
+        objc_setAssociatedObject(toast, &QBToastKey.start, NSValue(cgPoint: startpoint), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(toast, &QBToastKey.end  , NSValue(cgPoint: point)     , .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        queue.add(toast)
+      } else {
+        self.show(toast: toast, duration: duration, startpoint: startpoint, point: point, window: window)
+      }
     } catch QBToastError.messageIsNil {
       print("Toast message is required!")
     } catch { }
@@ -139,10 +178,9 @@ public class QBToast: UIViewController {
 
   private func show(toast: UIView,
                     duration: TimeInterval,
-                    position: QBToastPosition,
+                    startpoint: CGPoint,
+                    point: CGPoint,
                     window: UIWindow) {
-    let startpoint = position.startPoint(forToastView: toast, inSuperView: window)
-    let point = position.centerPoint(forToastView: toast, inSuperView: window)
 
     toast.center = startpoint
     toast.alpha = 0
@@ -154,6 +192,7 @@ public class QBToast: UIViewController {
       toast.isExclusiveTouch = true
     }
 
+    activeToasts.add (toast)
     window.addSubview(toast)
     UIView.animate(withDuration: QBToastManager.shared.style.fadeDuration,
                    delay: 0.0,
@@ -189,6 +228,7 @@ public class QBToast: UIViewController {
     if let timer = objc_getAssociatedObject(toast, &QBToastKey.timer) as? Timer {
       timer.invalidate()
     }
+
     var currentPoint = toast.center
     let centerYPoint = window.bounds.size.height / 2
 
@@ -206,8 +246,18 @@ public class QBToast: UIViewController {
       toast.alpha = 0
       toast.center = currentPoint
     } completion: { _ in
+      self.activeToasts.remove(toast)
       toast.removeFromSuperview()
       self.completionHandler?(byTap)
+
+      if let nextToast = self.queue.firstObject as? UIView,
+         let start = objc_getAssociatedObject(nextToast, &QBToastKey.start) as? NSValue,
+         let end   = objc_getAssociatedObject(nextToast, &QBToastKey.end  ) as? NSValue {
+        self.queue.removeObject(at: 0)
+        self.show(toast: nextToast, duration: self.duration,
+                  startpoint: start.cgPointValue, point: end.cgPointValue,
+                  window: window)
+      }
     }
   }
 }
@@ -299,7 +349,7 @@ public class QBToastManager {
   public var tapToDismissEnabled: Bool = true
 
   /** Display Toast in queue `Not emplementing...`*/
-  public var inQueueEnabled: Bool = false
+  public var inQueueEnabled: Bool = true
 }
 
 public enum QBToastPosition: Int, CaseIterable {

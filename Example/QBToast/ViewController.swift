@@ -14,7 +14,7 @@ class ViewController: UITableViewController {
   var btn: UIButton?
   let basic: [String] = ["Top", "Center", "Bottom"]
   let states: [String] = ["Success", "Warning", "Error", "Info", "Custom"]
-  let mores: [String] = ["Duration", "Tap to dismiss"]
+  let mores: [String] = ["Duration", "Tap to dismiss", "Toast queue"]
   var sections = [[String]]()
 
   let userDefaults = UserDefaults.standard
@@ -29,6 +29,7 @@ class ViewController: UITableViewController {
     static let message  = "message"
     static let duration = "duration"
     static let tapEnabled = "tapEnabled"
+    static let queueEnabled = "queueEnabled"
   }
 
   override init(style: UITableView.Style) {
@@ -44,6 +45,7 @@ class ViewController: UITableViewController {
     super.viewDidLoad()
     self.view.backgroundColor = .groupTableViewBackground
     QBToastManager.shared.tapToDismissEnabled = userDefaults.bool(forKey: ReuseStr.tapEnabled)
+    QBToastManager.shared.inQueueEnabled = userDefaults.bool(forKey: ReuseStr.queueEnabled)
     sections = [basic, states, mores]
 
     self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Message", style: .plain, target: self, action: #selector(setMessage))
@@ -109,6 +111,8 @@ extension ViewController {
           cell?.detailTextLabel?.text = "\(userDefaults.float(forKey: ReuseStr.duration))"
         case 1:
           cell?.detailTextLabel?.text = userDefaults.bool(forKey: ReuseStr.tapEnabled) ? "Enabled" : "Disabled"
+        case 2:
+          cell?.detailTextLabel?.text = userDefaults.bool(forKey: ReuseStr.queueEnabled) ? "Enabled" : "Disabled"
         default:
           break
       }
@@ -182,6 +186,10 @@ extension ViewController {
           let isEnabled = userDefaults.bool(forKey: ReuseStr.tapEnabled)
           QBToastManager.shared.tapToDismissEnabled = !isEnabled
           userDefaults.set(!isEnabled, forKey: ReuseStr.tapEnabled)
+        case 2:
+          let isEnabled = userDefaults.bool(forKey: ReuseStr.queueEnabled)
+          QBToastManager.shared.inQueueEnabled = !isEnabled
+          userDefaults.set(!isEnabled, forKey: ReuseStr.queueEnabled)
         default:
           break
       }
