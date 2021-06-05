@@ -321,8 +321,8 @@ public struct QBToastStyle {
     self.messageFont          = messageFont
     self.messageNumberOfLines = messageNumberOfLines
     self.messageAlignment     = messageAlignment
-    self.maxWidthPercentage   = maxWidthPercentage
-    self.maxHeightPercentage  = maxHeightPercentage
+    self.maxWidthPercentage   = max(min(maxWidthPercentage , 1.0), 0.0)
+    self.maxHeightPercentage  = max(min(maxHeightPercentage, 1.0), 0.0)
     self.toastPadding         = toastPadding
     self.cornerRadius         = cornerRadius
     self.fadeDuration         = fadeDuration
