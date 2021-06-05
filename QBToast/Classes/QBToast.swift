@@ -74,14 +74,14 @@ public class QBToast: UIViewController {
     }
   }
 
-  private var active: NSMutableArray {
+  private var activeToasts: NSMutableArray {
     get {
-      if let queue = objc_getAssociatedObject(UIView.self, &QBToastKey.active) as? NSMutableArray {
-        return queue
+      if let activeToasts = objc_getAssociatedObject(UIView.self, &QBToastKey.active) as? NSMutableArray {
+        return activeToasts
       } else {
-        let queue = NSMutableArray()
+        let activeToasts = NSMutableArray()
         objc_setAssociatedObject(UIView.self, &QBToastKey.active, queue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return queue
+        return activeToasts
       }
     }
   }
@@ -94,7 +94,8 @@ public class QBToast: UIViewController {
 
       let startpoint = position.startPoint(forToastView: toast, inSuperView: window)
       let point = position.centerPoint(forToastView: toast, inSuperView: window)
-      if QBToastManager.shared.inQueueEnabled, active.count > 0 {
+      if QBToastManager.shared.inQueueEnabled,
+         activeToasts.count > 0 {
         objc_setAssociatedObject(toast, &QBToastKey.start, NSValue(cgPoint: startpoint), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         objc_setAssociatedObject(toast, &QBToastKey.end  , NSValue(cgPoint: point)     , .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         queue.add(toast)
@@ -190,8 +191,8 @@ public class QBToast: UIViewController {
       toast.isUserInteractionEnabled = true
       toast.isExclusiveTouch = true
     }
-    active.add(toast)
-    print("queue: \(queue.count), active: \(active.count)")
+
+    activeToasts.add (toast)
     window.addSubview(toast)
     UIView.animate(withDuration: QBToastManager.shared.style.fadeDuration,
                    delay: 0.0,
@@ -227,6 +228,7 @@ public class QBToast: UIViewController {
     if let timer = objc_getAssociatedObject(toast, &QBToastKey.timer) as? Timer {
       timer.invalidate()
     }
+
     var currentPoint = toast.center
     let centerYPoint = window.bounds.size.height / 2
 
@@ -244,7 +246,7 @@ public class QBToast: UIViewController {
       toast.alpha = 0
       toast.center = currentPoint
     } completion: { _ in
-      self.active.remove(toast)
+      self.activeToasts.remove(toast)
       toast.removeFromSuperview()
       self.completionHandler?(byTap)
 
@@ -252,7 +254,9 @@ public class QBToast: UIViewController {
          let start = objc_getAssociatedObject(nextToast, &QBToastKey.start) as? NSValue,
          let end   = objc_getAssociatedObject(nextToast, &QBToastKey.end  ) as? NSValue {
         self.queue.removeObject(at: 0)
-        self.show(toast: nextToast, duration: self.duration, startpoint: start.cgPointValue, point: end.cgPointValue, window: window)
+        self.show(toast: nextToast, duration: self.duration,
+                  startpoint: start.cgPointValue, point: end.cgPointValue,
+                  window: window)
       }
     }
   }

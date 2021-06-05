@@ -20,7 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       "position": 0,
       "message": "This is sample Toast message",
       "duration": 0.5,
-      "tapEnabled": true
+      "tapEnabled": true,
+      "queueEnabled": true
     ])
 
     window = UIWindow(frame: UIScreen.main.bounds)
