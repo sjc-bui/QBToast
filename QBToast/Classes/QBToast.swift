@@ -224,7 +224,9 @@ public class QBToast: UIViewController {
 
   /** Hide Toast view*/
   private func hide(_ toast: UIView, byTap: Bool = false) {
-    guard let window = UIApplication.shared.keyWindow else { return }
+    guard let window = UIApplication.shared.keyWindow,
+          activeToasts.contains(toast) else { return }
+
     if let timer = objc_getAssociatedObject(toast, &QBToastKey.timer) as? Timer {
       timer.invalidate()
     }
