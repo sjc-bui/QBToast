@@ -6,6 +6,8 @@
 
 Simple way to show Toast message in iOS app with a single line of code.
 
+![QBToast]()
+
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
@@ -30,12 +32,15 @@ QBToast(message: "This is sample toast message").showToast { isTapped in
 Toast message with custom position and state.
 
 ```swift
+// position (default: .bottom)
+// state (default: .custom)
 QBToast(message: "Your message", position: .top, state: .success).showToast()
 ```
 
 Toast message with specific duration.
 ```swift
-QBToast(message: "Your message", duration: 3.0).showToast()
+// duration (default: 3.0)
+QBToast(message: "Your message", duration: 5.0).showToast()
 ```
 
 ### And more...
@@ -62,13 +67,28 @@ QBToast(message: "Your message", style: style).showToast { isTapped in
 
 Toggle `tapToDismissEnabled` functionality.
 ```swift
-QBToastManager.shared.tapToDismissEnabled = false
+QBToastManager.shared.tapToDismissEnabled = false // default = true
 ```
 
 Toggle queueing behavior.
 ```swift
-QBToastManager.shared.inQueueEnabled = false
+QBToastManager.shared.inQueueEnabled = false // default = true
 ```
+
+## Appearance
+Predefined style are:
+| Property | Type | Description | Default value |
+| --- | --- | --- | --- |
+| backgroundColor | `UIColor` | The background color of the Toast view. | `.black`
+| messageColor | `UIColor` | The message color. | `.white`
+| messageFont | `UIFont` | The message font. | `.systemFont(ofSize: 14.0, weight: .medium)`
+| messageNumberOfLines | `Int` | Number of lines. | `0`
+| messageAlignment | `NSTextAlignment` | Message alignment. | `.left`
+| maxWidthPercentage | `CGFloat` | The maximum width of Toast view relative to it's superview. | `0.8` (`80%`)
+| maxHeightPercentage | `CGFloat` | The maximum height of Toast view relative to it's superview. | `0.8` (`80%`)
+| toastPadding | `CGFloat` | The spacing from the horizontal and vertical edge of the Toast view to the content. | `12.0`
+| cornerRadius | `CGFloat` | The corner radius of the Toast view. | `2.0`
+| fadeDuration | `TimeInterval` | The fade in/out animation duration | `0.4`
 
 
 ## Installation
