@@ -37,10 +37,10 @@ public class QBToast: UIViewController {
   var completionHandler: QBToastCompletion = nil
 
   private struct QBToastKey {
-    static var timer = "timer"
-    static var queue = "queue"
-    static var start = "start"
-    static var end = "end"
+    static var timer  = "timer"
+    static var queue  = "queue"
+    static var start  = "start"
+    static var end    = "end"
     static var active = "active"
   }
 
@@ -93,14 +93,16 @@ public class QBToast: UIViewController {
       self.completionHandler = completionHandler
 
       let startpoint = position.startPoint(forToastView: toast, inSuperView: window)
-      let point = position.centerPoint(forToastView: toast, inSuperView: window)
+      let endpoint   = position.centerPoint(forToastView: toast, inSuperView: window)
       if QBToastManager.shared.inQueueEnabled,
          activeToasts.count > 0 {
         objc_setAssociatedObject(toast, &QBToastKey.start, NSValue(cgPoint: startpoint), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(toast, &QBToastKey.end  , NSValue(cgPoint: point)     , .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(toast, &QBToastKey.end  , NSValue(cgPoint: endpoint)  , .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         queue.add(toast)
       } else {
-        self.show(toast: toast, duration: duration, startpoint: startpoint, point: point, window: window)
+        self.show(toast: toast, duration: duration,
+                  startpoint: startpoint, endpoint: endpoint,
+                  window: window)
       }
     } catch QBToastError.messageIsNil {
       print("Toast message is required!")
@@ -179,7 +181,7 @@ public class QBToast: UIViewController {
   private func show(toast: UIView,
                     duration: TimeInterval,
                     startpoint: CGPoint,
-                    point: CGPoint,
+                    endpoint: CGPoint,
                     window: UIWindow) {
 
     toast.center = startpoint
@@ -200,7 +202,7 @@ public class QBToast: UIViewController {
                    initialSpringVelocity: 0.65,
                    options: .curveEaseIn) {
       toast.alpha = 1
-      toast.center = point
+      toast.center = endpoint
     } completion: { _ in
       let timer = Timer(timeInterval: duration,
                         target: self,
@@ -224,7 +226,9 @@ public class QBToast: UIViewController {
 
   /** Hide Toast view*/
   private func hide(_ toast: UIView, byTap: Bool = false) {
-    guard let window = UIApplication.shared.keyWindow else { return }
+    guard let window = UIApplication.shared.keyWindow,
+          activeToasts.contains(toast) else { return }
+
     if let timer = objc_getAssociatedObject(toast, &QBToastKey.timer) as? Timer {
       timer.invalidate()
     }
@@ -255,7 +259,7 @@ public class QBToast: UIViewController {
          let end   = objc_getAssociatedObject(nextToast, &QBToastKey.end  ) as? NSValue {
         self.queue.removeObject(at: 0)
         self.show(toast: nextToast, duration: self.duration,
-                  startpoint: start.cgPointValue, point: end.cgPointValue,
+                  startpoint: start.cgPointValue, endpoint: end.cgPointValue,
                   window: window)
       }
     }
@@ -321,8 +325,8 @@ public struct QBToastStyle {
     self.messageFont          = messageFont
     self.messageNumberOfLines = messageNumberOfLines
     self.messageAlignment     = messageAlignment
-    self.maxWidthPercentage   = maxWidthPercentage
-    self.maxHeightPercentage  = maxHeightPercentage
+    self.maxWidthPercentage   = max(min(maxWidthPercentage , 1.0), 0.0)
+    self.maxHeightPercentage  = max(min(maxHeightPercentage, 1.0), 0.0)
     self.toastPadding         = toastPadding
     self.cornerRadius         = cornerRadius
     self.fadeDuration         = fadeDuration
@@ -348,7 +352,7 @@ public class QBToastManager {
   /** Enable tap action to dismiss toast `Default true`*/
   public var tapToDismissEnabled: Bool = true
 
-  /** Display Toast in queue `Not emplementing...`*/
+  /** Display Toast in queue `Default true`*/
   public var inQueueEnabled: Bool = true
 }
 
