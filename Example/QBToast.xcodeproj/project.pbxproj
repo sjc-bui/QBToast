@@ -67,6 +67,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2E0B3D36266DA6750006574E /* Screenshots */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Screenshots;
+			sourceTree = "<group>";
+		};
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
@@ -91,6 +98,7 @@
 		607FACD21AFB9204008FA782 /* Example for QBToast */ = {
 			isa = PBXGroup;
 			children = (
+				2E0B3D36266DA6750006574E /* Screenshots */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
