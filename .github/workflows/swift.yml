@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Select Xcode version
-      run: sudo xcode-select --switch /Library/Developer/CommandLineTools
+      run: sudo xcode-select --switch /Applications/Xcode_12.5.app/Contents/Developer
     - name: Show Xcode version
       run: xcodebuild -version
     - name: Build
