@@ -6,7 +6,11 @@
 
 Simple way to show Toast message in iOS app with a single line of code.
 
-![QBToast]()
+![QBToast](https://github.com/sjc-bui/QBToast/blob/clear-queue/Example/QBToast/screen-record.gif?raw=true)
+
+Screenshots: [default](https://github.com/sjc-bui/QBToast/blob/clear-queue/Example/QBToast/default.png) -
+[success](https://github.com/sjc-bui/QBToast/blob/clear-queue/Example/QBToast/success.png) -
+[warning](https://github.com/sjc-bui/QBToast/blob/clear-queue/Example/QBToast/warning.png)
 
 ## Example
 
