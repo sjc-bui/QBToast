@@ -2,27 +2,47 @@ import XCTest
 import QBToast
 
 class Tests: XCTestCase {
-    
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+  var toast: QBToast!
+  override func setUp() {
+    super.setUp()
+  }
+
+  override func tearDown() {
+    toast = nil
+    super.tearDown()
+  }
+
+  func testCreateToast() {
+    toast = QBToast(message: "test")
+    XCTAssertEqual(toast.message, "test")
+    XCTAssertEqual(toast.position, .bottom)
+    XCTAssertEqual(toast.duration, 3.0)
+    XCTAssertEqual(toast.state, .custom)
+    toast.showToast()
+  }
+
+  func testToastStyle() {
+    toast = QBToast(message: "test2")
+    XCTAssertEqual(toast.message, "test2")
+    XCTAssertEqual(toast.style.messageColor, .white)
+    XCTAssertEqual(toast.style.messageAlignment, .left)
+    XCTAssertEqual(toast.style.cornerRadius, 2.0)
+    XCTAssertEqual(toast.style.fadeDuration, 0.4)
+    XCTAssertEqual(toast.style.backgroundColor, .black.withAlphaComponent(0.8))
+    XCTAssertEqual(toast.style.toastPadding, 12)
+    XCTAssertEqual(toast.style.messageNumberOfLines, 0)
+    toast.showToast()
+  }
+
+  func testToastShow() {
+    toast = QBToast(message: "test3", duration: 0.5)
+    toast.showToast()
+
+    let appearExpectation = self.expectation(description: "Wait for toast appear")
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+      appearExpectation.fulfill()
+      XCTAssertEqual(self.toast.message, "test3")
     }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-    
-    func testExample() {
-        // This is an example of a functional test case.
-        XCTAssert(true, "Pass")
-    }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure() {
-            // Put the code you want to measure the time of here.
-        }
-    }
-    
+    wait(for: [appearExpectation], timeout: 1)
+  }
 }

@@ -28,11 +28,15 @@ public typealias QBToastCompletion = ((Bool) -> Void)?
 
 public class QBToast: UIViewController {
 
-  let message: String?
-  let style: QBToastStyle!
-  let position: QBToastPosition
-  let duration: TimeInterval
-  let state: QBToastState
+  public var message: String?
+
+  public var style: QBToastStyle!
+
+  public var position: QBToastPosition
+
+  public var duration: TimeInterval
+
+  public var state: QBToastState
 
   var completionHandler: QBToastCompletion = nil
 
@@ -281,32 +285,32 @@ public enum QBToastState {
 public struct QBToastStyle {
 
   /** Toast view background color. Default `.black(0.8)`*/
-  let backgroundColor: UIColor
+  public var backgroundColor: UIColor
 
   /** Toast message color*/
-  let messageColor: UIColor
+  public var messageColor: UIColor
 
   /** Toast message font*/
-  let messageFont: UIFont
+  public var messageFont: UIFont
 
   /** Toast message number of lines*/
-  let messageNumberOfLines: Int
+  public var messageNumberOfLines: Int
 
   /** Toast message alignment*/
-  let messageAlignment: NSTextAlignment
+  public var messageAlignment: NSTextAlignment
 
-  let maxWidthPercentage: CGFloat
+  public var maxWidthPercentage: CGFloat
 
-  let maxHeightPercentage: CGFloat
+  public var maxHeightPercentage: CGFloat
 
   /** Toast message padding*/
-  let toastPadding: CGFloat
+  public var toastPadding: CGFloat
 
   /** Corner radius of Toast View*/
-  let cornerRadius: CGFloat
+  public var cornerRadius: CGFloat
 
   /** Toast appear, disappear duration*/
-  let fadeDuration: TimeInterval
+  public var fadeDuration: TimeInterval
 
   public init(
     backgroundColor: UIColor = .black,
