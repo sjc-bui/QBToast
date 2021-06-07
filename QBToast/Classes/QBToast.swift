@@ -41,11 +41,10 @@ public class QBToast: UIViewController {
   var completionHandler: QBToastCompletion = nil
 
   private struct QBToastKey {
-    static var timer  = "timer"
-    static var queue  = "queue"
-    static var start  = "start"
-    static var end    = "end"
-    static var active = "active"
+    static var timer    = "timer"
+    static var queue    = "queue"
+    static var active   = "active"
+    static var position = "position"
   }
 
   public init(message: String?,
@@ -96,14 +95,13 @@ public class QBToast: UIViewController {
       let toast = try createToastView(message: message, style: style, state: state, window: window)
       self.completionHandler = completionHandler
 
-      let startpoint = position.startPoint(forToastView: toast, inSuperView: window)
-      let endpoint   = position.centerPoint(forToastView: toast, inSuperView: window)
       if QBToastManager.shared.inQueueEnabled,
          activeToasts.count > 0 {
-        objc_setAssociatedObject(toast, &QBToastKey.start, NSValue(cgPoint: startpoint), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(toast, &QBToastKey.end  , NSValue(cgPoint: endpoint)  , .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(toast, &QBToastKey.position, position.rawValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         queue.add(toast)
       } else {
+        let startpoint = position.startPoint(forToastView:  toast, inSuperView: window)
+        let endpoint   = position.centerPoint(forToastView: toast, inSuperView: window)
         self.show(toast: toast, duration: duration,
                   startpoint: startpoint, endpoint: endpoint,
                   window: window)
@@ -259,12 +257,15 @@ public class QBToast: UIViewController {
       self.completionHandler?(byTap)
 
       if let nextToast = self.queue.firstObject as? UIView,
-         let start = objc_getAssociatedObject(nextToast, &QBToastKey.start) as? NSValue,
-         let end   = objc_getAssociatedObject(nextToast, &QBToastKey.end  ) as? NSValue {
-        self.queue.removeObject(at: 0)
-        self.show(toast: nextToast, duration: self.duration,
-                  startpoint: start.cgPointValue, endpoint: end.cgPointValue,
-                  window: window)
+         let position = objc_getAssociatedObject(nextToast, &QBToastKey.position) as? Int {
+        let toastPosition = QBToastPosition(rawValue: position)
+        if let start = toastPosition?.startPoint(forToastView:  nextToast, inSuperView: window),
+           let end   = toastPosition?.centerPoint(forToastView: nextToast, inSuperView: window) {
+          self.queue.removeObject(at: 0)
+          self.show(toast: nextToast, duration: self.duration,
+                    startpoint: start, endpoint: end,
+                    window: window)
+        }
       }
     }
   }
