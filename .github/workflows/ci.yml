@@ -13,7 +13,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Build
-      run: swift build -v
-    - name: Run tests
-      run: swift test -v
+    - name: Select Xcode version
+      run: sudo xcode-select -switch /Applications/Xcode.app
+    - name: Show Xcode version
+      run: xcodebuild -version
+    - name: Build Simulator
+      run: xcodebuild clean build test -workspace Example/QBToast.xcworkspace -scheme 'QBToast-Example' -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=14.4,name=iPhone 12' ONLY_ACTIVE_ARCH=NO CODE_SIGNING_REQUIRED=NO
