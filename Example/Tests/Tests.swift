@@ -15,20 +15,20 @@ class Tests: XCTestCase {
   func testCreateToast() {
     toast = QBToast(message: "test")
     XCTAssertEqual(toast.message, "test")
-    XCTAssertEqual(toast.position, .bottom)
+    XCTAssertEqual(toast.position, QBToastPosition.bottom)
     XCTAssertEqual(toast.duration, 3.0)
-    XCTAssertEqual(toast.state, .custom)
+    XCTAssertEqual(toast.state, QBToastState.custom)
     toast.showToast()
   }
 
   func testToastStyle() {
     toast = QBToast(message: "test2")
     XCTAssertEqual(toast.message, "test2")
-    XCTAssertEqual(toast.style.messageColor, .white)
-    XCTAssertEqual(toast.style.messageAlignment, .left)
+    XCTAssertEqual(toast.style.messageColor, UIColor.white)
+    XCTAssertEqual(toast.style.messageAlignment, NSTextAlignment.left)
     XCTAssertEqual(toast.style.cornerRadius, 2.0)
     XCTAssertEqual(toast.style.fadeDuration, 0.4)
-    XCTAssertEqual(toast.style.backgroundColor, .black.withAlphaComponent(0.8))
+    XCTAssertEqual(toast.style.backgroundColor, UIColor.black.withAlphaComponent(0.8))
     XCTAssertEqual(toast.style.toastPadding, 12)
     XCTAssertEqual(toast.style.messageNumberOfLines, 0)
     toast.showToast()
