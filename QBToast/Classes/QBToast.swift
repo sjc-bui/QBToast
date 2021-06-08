@@ -83,7 +83,7 @@ public class QBToast: UIViewController {
         return activeToasts
       } else {
         let activeToasts = NSMutableArray()
-        objc_setAssociatedObject(UIView.self, &QBToastKey.active, queue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(UIView.self, &QBToastKey.active, activeToasts, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         return activeToasts
       }
     }
@@ -222,14 +222,14 @@ public class QBToast: UIViewController {
   }
 
   @objc func toastTimer(_ timer: Timer) {
-    guard let toast = timer.userInfo as? UIView else { return }
+    guard let toast = timer.userInfo as? UIView,
+          activeToasts.contains(toast) else { return }
     self.hide(toast)
   }
 
   /** Hide Toast view*/
   private func hide(_ toast: UIView, byTap: Bool = false) {
-    guard let window = UIApplication.shared.keyWindow,
-          activeToasts.contains(toast) else { return }
+    guard let window = UIApplication.shared.keyWindow else { return }
 
     if let timer = objc_getAssociatedObject(toast, &QBToastKey.timer) as? Timer {
       timer.invalidate()
