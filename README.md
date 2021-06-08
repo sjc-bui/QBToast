@@ -57,7 +57,7 @@ let style = QBToastStyle(backgroundColor: .darkGray,
                         messageNumberOfLines: 1,
                         messageAlignment: .center,
                         cornerRadius: 12.0,
-                        fadeDuration: 3.0)
+                        fadeDuration: 0.5)
 
 QBToast(message: "Your message", style: style).showToast { isTapped in
             // do stuff here
