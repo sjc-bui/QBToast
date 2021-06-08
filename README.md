@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/cocoapods/l/QBToast.svg?style=flat)](https://cocoapods.org/pods/QBToast)
 [![Platform](https://img.shields.io/cocoapods/p/QBToast.svg?style=flat)](https://cocoapods.org/pods/QBToast)
 
-Simple way to show Toast message in iOS app with a single line of code.
+Simple way to display Toast message in iOS app with a single line of code.
 
 <img src="https://github.com/sjc-bui/QBToast/blob/master/Example/QBToast/screen-record.gif" width="250">
 
