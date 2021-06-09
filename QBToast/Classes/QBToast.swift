@@ -45,6 +45,7 @@ public class QBToast: UIViewController {
     static var queue    = "queue"
     static var active   = "active"
     static var position = "position"
+    static var duration = "duration"
   }
 
   public init(message: String?,
@@ -97,14 +98,12 @@ public class QBToast: UIViewController {
 
       if QBToastManager.shared.inQueueEnabled,
          activeToasts.count > 0 {
-        objc_setAssociatedObject(toast, &QBToastKey.position, position.rawValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(toast, &QBToastKey.position, NSNumber(value: position.rawValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(toast, &QBToastKey.duration, NSNumber(value: duration), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         queue.add(toast)
       } else {
-        let startpoint = position.startPoint(forToastView:  toast, inSuperView: window)
-        let endpoint   = position.centerPoint(forToastView: toast, inSuperView: window)
         self.show(toast: toast, duration: duration,
-                  startpoint: startpoint, endpoint: endpoint,
-                  window: window)
+                  position: position, window: window)
       }
     } catch QBToastError.messageIsNil {
       print("Toast message is required!")
@@ -182,10 +181,10 @@ public class QBToast: UIViewController {
 
   private func show(toast: UIView,
                     duration: TimeInterval,
-                    startpoint: CGPoint,
-                    endpoint: CGPoint,
+                    position: QBToastPosition,
                     window: UIWindow) {
-
+    let startpoint = position.startPoint(forToastView:  toast, inSuperView: window)
+    let endpoint   = position.centerPoint(forToastView: toast, inSuperView: window)
     toast.center = startpoint
     toast.alpha = 0
 
@@ -202,7 +201,7 @@ public class QBToast: UIViewController {
                    delay: 0.0,
                    usingSpringWithDamping: 0.8,
                    initialSpringVelocity: 0.65,
-                   options: .curveEaseIn) {
+                   options: .curveLinear) {
       toast.alpha = 1
       toast.center = endpoint
     } completion: { _ in
@@ -248,7 +247,7 @@ public class QBToast: UIViewController {
                    delay: 0.0,
                    usingSpringWithDamping: 0.8,
                    initialSpringVelocity: 0.65,
-                   options: .curveEaseOut) {
+                   options: .curveLinear) {
       toast.alpha = 0
       toast.center = currentPoint
     } completion: { _ in
@@ -257,14 +256,12 @@ public class QBToast: UIViewController {
       self.completionHandler?(byTap)
 
       if let nextToast = self.queue.firstObject as? UIView,
-         let position = objc_getAssociatedObject(nextToast, &QBToastKey.position) as? Int {
-        let toastPosition = QBToastPosition(rawValue: position)
-        if let start = toastPosition?.startPoint(forToastView:  nextToast, inSuperView: window),
-           let end   = toastPosition?.centerPoint(forToastView: nextToast, inSuperView: window) {
+         let position = objc_getAssociatedObject(nextToast, &QBToastKey.position) as? NSNumber,
+         let duration = objc_getAssociatedObject(nextToast, &QBToastKey.duration) as? NSNumber {
+        if let toastPosition = QBToastPosition(rawValue: position.intValue) {
           self.queue.removeObject(at: 0)
-          self.show(toast: nextToast, duration: self.duration,
-                    startpoint: start, endpoint: end,
-                    window: window)
+          self.show(toast: nextToast, duration: duration.doubleValue,
+                    position: toastPosition, window: window)
         }
       }
     }
@@ -275,12 +272,12 @@ private enum QBToastError: Error {
   case messageIsNil
 }
 
-public enum QBToastState {
-  case success
-  case warning
-  case error
-  case info
-  case custom
+public enum QBToastState: Int, CaseIterable {
+  case success = 0
+  case warning = 1
+  case error   = 2
+  case info    = 3
+  case custom  = 4
 }
 
 public struct QBToastStyle {

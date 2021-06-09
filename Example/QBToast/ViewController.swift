@@ -12,23 +12,23 @@ import QBToast
 class ViewController: UITableViewController {
 
   var btn: UIButton?
+  let durations: [TimeInterval] = [1.0, 0.5, 2.0, 3.0, 4.0]
   let basic: [String] = ["Top", "Center", "Bottom"]
-  let states: [String] = ["Success", "Warning", "Error", "Info", "Custom"]
-  let mores: [String] = ["Duration", "Tap to dismiss", "Toast queue"]
+  var states: [String] = []
+  let mores: [String] = ["Tap to dismiss", "Toast queue"]
   var sections = [[String]]()
 
   let userDefaults = UserDefaults.standard
 
   fileprivate struct ReuseIdentifier {
-    static let cell = "cellId"
+    static let cell       = "cellId"
     static let cellValue1 = "cellVal1"
   }
 
   fileprivate struct ReuseStr {
-    static let position = "position"
-    static let message  = "message"
-    static let duration = "duration"
-    static let tapEnabled = "tapEnabled"
+    static let position     = "position"
+    static let message      = "message"
+    static let tapEnabled   = "tapEnabled"
     static let queueEnabled = "queueEnabled"
   }
 
@@ -46,6 +46,10 @@ class ViewController: UITableViewController {
     self.view.backgroundColor = .groupTableViewBackground
     QBToastManager.shared.tapToDismissEnabled = userDefaults.bool(forKey: ReuseStr.tapEnabled)
     QBToastManager.shared.inQueueEnabled = userDefaults.bool(forKey: ReuseStr.queueEnabled)
+
+    for state in QBToastState.allCases {
+      states.append("\(state.rawValue) - `.\(state)` in \(durations[state.rawValue])s")
+    }
     sections = [basic, states, mores]
 
     self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Message",
@@ -111,10 +115,8 @@ extension ViewController {
       cell = UITableViewCell(style: .value1, reuseIdentifier: ReuseIdentifier.cellValue1)
       switch indexPath.row {
       case 0:
-        cell?.detailTextLabel?.text = "\(userDefaults.float(forKey: ReuseStr.duration))"
-      case 1:
         cell?.detailTextLabel?.text = userDefaults.bool(forKey: ReuseStr.tapEnabled) ? "Enabled" : "Disabled"
-      case 2:
+      case 1:
         cell?.detailTextLabel?.text = userDefaults.bool(forKey: ReuseStr.queueEnabled) ? "Enabled" : "Disabled"
       default:
         break
@@ -127,7 +129,6 @@ extension ViewController {
     return cell!
   }
 
-  // swiftlint:disable:next cyclomatic_complexity function_body_length
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let prevIndex = userDefaults.integer(forKey: ReuseStr.position)
 
@@ -140,49 +141,19 @@ extension ViewController {
     } else if indexPath.section == 1 {
       let pos: QBToastPosition = prevIndex == 0 ? .top : prevIndex == 1 ? .center : .bottom
       let message = userDefaults.string(forKey: ReuseStr.message)
-      let duration = userDefaults.float(forKey: ReuseStr.duration)
+      let defaultState: QBToastState = QBToastState(rawValue: indexPath.row)!
 
-      switch indexPath.row {
-      case 0:
-        QBToast(message: message, position: pos, duration: TimeInterval(duration),
-                state: .success).showToast { bol in
-          self.status(bol)
-        }
-      case 1:
-        QBToast(message: message, position: pos, duration: TimeInterval(duration),
-                state: .warning).showToast { bol in
-          self.status(bol)
-        }
-      case 2:
-        QBToast(message: message, position: pos, duration: TimeInterval(duration),
-                state: .error).showToast { bol in
-          self.status(bol)
-        }
-      case 3:
-        QBToast(message: message, position: pos, duration: TimeInterval(duration),
-                state: .info).showToast { bol in
-          self.status(bol)
-        }
-      case 4:
-        QBToast(message: message, position: pos, duration: TimeInterval(duration),
-                state: .custom).showToast { bol in
-          self.status(bol)
-        }
-      default:
-        break
+      QBToast(message: message, position: pos, duration: durations[indexPath.row],
+              state: defaultState).showToast { bol in
+        self.status(bol)
       }
     } else if indexPath.section == 2 {
       switch indexPath.row {
       case 0:
-        var duration: Float = userDefaults.float(forKey: ReuseStr.duration)
-        duration += 0.5
-        if duration > 5.0 { duration = 0.5 }
-        userDefaults.set(duration, forKey: ReuseStr.duration)
-      case 1:
         let isEnabled = userDefaults.bool(forKey: ReuseStr.tapEnabled)
         QBToastManager.shared.tapToDismissEnabled = !isEnabled
         userDefaults.set(!isEnabled, forKey: ReuseStr.tapEnabled)
-      case 2:
+      case 1:
         let isEnabled = userDefaults.bool(forKey: ReuseStr.queueEnabled)
         QBToastManager.shared.inQueueEnabled = !isEnabled
         userDefaults.set(!isEnabled, forKey: ReuseStr.queueEnabled)
