@@ -185,10 +185,10 @@ public class QBToast: UIViewController {
                     duration: TimeInterval,
                     position: QBToastPosition,
                     window: UIWindow) {
-    let startpoint = position.startPoint(forToastView:  toast, inSuperView: window)
     let endpoint   = position.centerPoint(forToastView: toast, inSuperView: window)
-    toast.center = startpoint
     toast.alpha = 0
+    toast.center = endpoint
+    toast.transform = CGAffineTransform(scaleX: 0.66, y: 0.66)
 
     if QBToastManager.shared.tapToDismissEnabled {
       let toastRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapToDismiss(_:)))
@@ -199,13 +199,12 @@ public class QBToast: UIViewController {
 
     activeToasts.add (toast)
     window.addSubview(toast)
-    UIView.animate(withDuration: QBToastManager.shared.style.fadeDuration,
+
+    UIView.animate(withDuration: 0.086,
                    delay: 0.0,
-                   usingSpringWithDamping: 0.8,
-                   initialSpringVelocity: 0.65,
-                   options: .curveLinear) {
+                   options: .curveEaseIn) {
       toast.alpha = 1
-      toast.center = endpoint
+      toast.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
     } completion: { _ in
       let timer = Timer(timeInterval: duration,
                         target: self,
@@ -236,22 +235,11 @@ public class QBToast: UIViewController {
       timer.invalidate()
     }
 
-    var currentPoint = toast.center
-    let centerYPoint = window.bounds.size.height / 2
-
-    if currentPoint.y > centerYPoint {
-      currentPoint.y += (toast.frame.size.height * 2)
-    } else {
-      currentPoint.y -= (toast.frame.size.height * 2)
-    }
-
-    UIView.animate(withDuration: QBToastManager.shared.style.fadeDuration,
+    UIView.animate(withDuration: 0.11,
                    delay: 0.0,
-                   usingSpringWithDamping: 0.8,
-                   initialSpringVelocity: 0.65,
-                   options: .curveLinear) {
+                   options: .curveEaseOut) {
+      toast.transform = CGAffineTransform(scaleX: 0.68, y: 0.68)
       toast.alpha = 0
-      toast.center = currentPoint
     } completion: { _ in
       self.activeToasts.remove(toast)
       toast.removeFromSuperview()
@@ -387,22 +375,6 @@ public enum QBToastPosition: Int, CaseIterable {
       case .bottom:
         return CGPoint(x: superview.bounds.size.width / 2,
                        y: superview.bounds.size.height - (toast.frame.size.height / 2) - bottomPadding)
-    }
-  }
-
-  /** `Toast` start animation from start point*/
-  fileprivate func startPoint(forToastView toast: UIView,
-                              inSuperView superview: UIView) -> CGPoint {
-    switch self {
-      case .top:
-        return CGPoint(x: superview.bounds.size.width / 2,
-                       y: -toast.frame.size.height)
-      case .center:
-        return CGPoint(x: superview.bounds.size.width / 2,
-                       y: superview.bounds.size.height / 2 - toast.frame.size.height)
-      case .bottom:
-        return CGPoint(x: superview.bounds.size.width / 2,
-                       y: superview.bounds.size.height + toast.frame.size.height)
     }
   }
 }
