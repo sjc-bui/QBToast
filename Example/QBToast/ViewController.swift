@@ -34,7 +34,7 @@ class ViewController: UITableViewController {
 
   override init(style: UITableView.Style) {
     super.init(style: style)
-    self.title = "QBToast iOS"
+    self.title = "QBToast"
   }
 
   required init?(coder: NSCoder) {
