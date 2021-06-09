@@ -314,18 +314,18 @@ public struct QBToastStyle {
   public var fadeDuration: TimeInterval
 
   public init(
-    backgroundColor: UIColor = .black,
+    backgroundColor: UIColor = UIColor(hex: "#323232"),
     messageColor: UIColor = .white,
     messageFont: UIFont = .systemFont(ofSize: 14.0, weight: .medium),
     messageNumberOfLines: Int = 0,
     messageAlignment: NSTextAlignment = .left,
     maxWidthPercentage: CGFloat = 0.8,
     maxHeightPercentage: CGFloat = 0.8,
-    toastPadding: CGFloat = 12.0,
-    cornerRadius: CGFloat = 2.0,
+    toastPadding: CGFloat = 16.0,
+    cornerRadius: CGFloat = 4.0,
     fadeDuration: TimeInterval = 0.4
   ) {
-    self.backgroundColor      = backgroundColor.withAlphaComponent(0.8)
+    self.backgroundColor      = backgroundColor
     self.messageColor         = messageColor
     self.messageFont          = messageFont
     self.messageNumberOfLines = messageNumberOfLines
@@ -425,7 +425,7 @@ extension CALayer {
   }
 }
 
-extension UIColor {
+public extension UIColor {
   static let success = UIColor(hex: "#5cb85c")
   static let warning = UIColor(hex: "#f0ad4e")
   static let error   = UIColor(hex: "#d9534f")
