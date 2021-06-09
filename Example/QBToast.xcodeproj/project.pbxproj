@@ -188,6 +188,7 @@
 				607FACCD1AFB9204008FA782 /* Frameworks */,
 				607FACCE1AFB9204008FA782 /* Resources */,
 				1877AC9B0A0BBAE4010B4485 /* [CP] Embed Pods Frameworks */,
+				2E1EA1B4267043A3008CB917 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -300,6 +301,23 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-QBToast_Example/Pods-QBToast_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		2E1EA1B4267043A3008CB917 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 		67AD73352986EA2DF81DD5E3 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

@@ -8,6 +8,5 @@ target 'QBToast_Example' do
   target 'QBToast_Tests' do
     inherit! :search_paths
 
-    
   end
 end
