@@ -26,10 +26,10 @@ class Tests: XCTestCase {
     XCTAssertEqual(toast.message, "test2")
     XCTAssertEqual(toast.style.messageColor, UIColor.white)
     XCTAssertEqual(toast.style.messageAlignment, NSTextAlignment.left)
-    XCTAssertEqual(toast.style.cornerRadius, 2.0)
+    XCTAssertEqual(toast.style.cornerRadius, 4.0)
     XCTAssertEqual(toast.style.fadeDuration, 0.4)
-    XCTAssertEqual(toast.style.backgroundColor, UIColor.black.withAlphaComponent(0.8))
-    XCTAssertEqual(toast.style.toastPadding, 12)
+    XCTAssertEqual(toast.style.backgroundColor, UIColor(hex: "#323232"))
+    XCTAssertEqual(toast.style.toastPadding, 16)
     XCTAssertEqual(toast.style.messageNumberOfLines, 0)
     toast.showToast()
   }

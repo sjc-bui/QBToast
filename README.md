@@ -84,15 +84,15 @@ QBToastManager.shared.inQueueEnabled = false // default = true
 Predefined style are:
 | Property | Type | Description | Default value |
 | --- | --- | --- | --- |
-| backgroundColor | `UIColor` | The background color of the Toast view. | `.black`
+| backgroundColor | `UIColor` | The background color of the Toast view. | `#323232`
 | messageColor | `UIColor` | The message color. | `.white`
 | messageFont | `UIFont` | The message font. | `.systemFont(ofSize: 14.0, weight: .medium)`
 | messageNumberOfLines | `Int` | Number of lines. | `0`
 | messageAlignment | `NSTextAlignment` | Message alignment. | `.left`
 | maxWidthPercentage | `CGFloat` | The maximum width of Toast view relative to it's superview. | `0.8` (`80%`)
 | maxHeightPercentage | `CGFloat` | The maximum height of Toast view relative to it's superview. | `0.8` (`80%`)
-| toastPadding | `CGFloat` | The spacing from the horizontal and vertical edge of the Toast view to the content. | `12.0`
-| cornerRadius | `CGFloat` | The corner radius of the Toast view. | `2.0`
+| toastPadding | `CGFloat` | The spacing from the horizontal and vertical edge of the Toast view to the content. | `16.0`
+| cornerRadius | `CGFloat` | The corner radius of the Toast view. | `4.0`
 | fadeDuration | `TimeInterval` | The fade in/out animation duration | `0.4`
 
 
