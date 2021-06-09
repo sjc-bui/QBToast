@@ -110,6 +110,7 @@ public class QBToast: UIViewController {
     } catch { }
   }
 
+  // MARK: - Create Toast View
   private func createToastView(message: String?,
                                style: QBToastStyle,
                                state: QBToastState,
@@ -179,6 +180,7 @@ public class QBToast: UIViewController {
     return wrapView
   }
 
+  // MARK: - Show Toast
   private func show(toast: UIView,
                     duration: TimeInterval,
                     position: QBToastPosition,
@@ -226,7 +228,7 @@ public class QBToast: UIViewController {
     self.hide(toast)
   }
 
-  /** Hide Toast view*/
+  // MARK: -  Hide Toast
   private func hide(_ toast: UIView, byTap: Bool = false) {
     guard let window = UIApplication.shared.keyWindow else { return }
 
@@ -268,10 +270,12 @@ public class QBToast: UIViewController {
   }
 }
 
+// MARK: - Toast Error
 private enum QBToastError: Error {
   case messageIsNil
 }
 
+// MARK: - Toast States
 public enum QBToastState: Int, CaseIterable {
   case success = 0
   case warning = 1
@@ -280,6 +284,7 @@ public enum QBToastState: Int, CaseIterable {
   case custom  = 4
 }
 
+// MARK: - Toast Style
 public struct QBToastStyle {
 
   /** Toast view background color. Default `.black(0.8)`*/
@@ -335,6 +340,7 @@ public struct QBToastStyle {
   }
 }
 
+// MARK: - Toast Manager
 public class QBToastManager {
   /** Singleton instance*/
   public static let shared = QBToastManager()
@@ -358,6 +364,7 @@ public class QBToastManager {
   public var inQueueEnabled: Bool = true
 }
 
+// MARK: - Toast Position
 public enum QBToastPosition: Int, CaseIterable {
   case top    = 0
   case center = 1
@@ -400,6 +407,7 @@ public enum QBToastPosition: Int, CaseIterable {
   }
 }
 
+// MARK: - Extension
 private extension UIView {
   /**
    Get safeAreaInsets
@@ -423,10 +431,10 @@ extension CALayer {
 }
 
 public extension UIColor {
-  static let success = UIColor(hex: "#5cb85c")
-  static let warning = UIColor(hex: "#f0ad4e")
-  static let error   = UIColor(hex: "#d9534f")
-  static let info    = UIColor(hex: "#5bc0de")
+  static let success = UIColor(hex: "#4caf50")
+  static let warning = UIColor(hex: "#ff9800")
+  static let error   = UIColor(hex: "#f44336")
+  static let info    = UIColor(hex: "#2196f3")
 
   /// - Parameter hexString: hex string
   convenience init(hex hexString: String) {

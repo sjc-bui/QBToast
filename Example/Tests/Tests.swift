@@ -42,6 +42,7 @@ class Tests: XCTestCase {
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
       appearExpectation.fulfill()
       XCTAssertEqual(self.toast.message, "test3")
+      XCTAssertEqual(self.toast.style.backgroundColor, UIColor(hex: "#323232"))
     }
     wait(for: [appearExpectation], timeout: 1)
   }
