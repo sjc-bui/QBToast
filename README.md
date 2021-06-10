@@ -9,10 +9,6 @@ Simple way to display Toast message in iOS app with a single line of code.
 
 <img src="https://github.com/sjc-bui/QBToast/blob/master/Example/QBToast/screen-record.gif" width="250">
 
-Screenshots: [default](https://github.com/sjc-bui/QBToast/blob/master/Example/QBToast/default.png) -
-[success](https://github.com/sjc-bui/QBToast/blob/master/Example/QBToast/success.png) -
-[warning](https://github.com/sjc-bui/QBToast/blob/master/Example/QBToast/warning.png)
-
 ## Example
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
