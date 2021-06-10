@@ -170,7 +170,16 @@ public class QBToast: UIViewController {
         wrapView.backgroundColor = style.backgroundColor
     }
 
-    wrapView.layer.roundCorner(radius: style.cornerRadius)
+    wrapView.layer.cornerRadius = style.cornerRadius
+
+    if style.shadowEnabled {
+      wrapView.clipsToBounds       = true
+      wrapView.layer.shadowColor   = style.shadowColor.cgColor
+      wrapView.layer.shadowOffset  = style.shadowOffset
+      wrapView.layer.shadowOpacity = style.shadowOpacity
+      wrapView.layer.shadowRadius  = style.shadowRadius
+      wrapView.layer.masksToBounds = false
+    }
 
     if let messageLabel = messageLabel {
       messageLabel.frame = messageRect
@@ -300,20 +309,40 @@ public struct QBToastStyle {
   /** Corner radius of Toast View*/
   public var cornerRadius: CGFloat
 
+  /** Drop Toast message shadow*/
+  public var shadowEnabled: Bool
+
+  /** The shadow color*/
+  public var shadowColor: UIColor
+
+  /** The shadow radius*/
+  public var shadowRadius: CGFloat
+
+  /** The shadow opacity*/
+  public var shadowOpacity: Float
+
+  /** The shadow offset*/
+  public var shadowOffset: CGSize
+
   /** Toast appear, disappear duration*/
   public var fadeDuration: TimeInterval
 
   public init(
-    backgroundColor: UIColor = UIColor(hex: "#323232"),
-    messageColor: UIColor = .white,
-    messageFont: UIFont = .systemFont(ofSize: 14.0, weight: .medium),
-    messageNumberOfLines: Int = 0,
+    backgroundColor: UIColor          = UIColor(hex: "#323232"),
+    messageColor: UIColor             = .white,
+    messageFont: UIFont               = .systemFont(ofSize: 14.0, weight: .medium),
+    messageNumberOfLines: Int         = 0,
     messageAlignment: NSTextAlignment = .left,
-    maxWidthPercentage: CGFloat = 0.8,
-    maxHeightPercentage: CGFloat = 0.8,
-    toastPadding: CGFloat = 16.0,
-    cornerRadius: CGFloat = 4.0,
-    fadeDuration: TimeInterval = 0.4
+    maxWidthPercentage: CGFloat       = 0.8,
+    maxHeightPercentage: CGFloat      = 0.8,
+    toastPadding: CGFloat             = 16.0,
+    cornerRadius: CGFloat             = 4.0,
+    shadowEnabled: Bool               = true,
+    shadowColor: UIColor              = UIColor(hex: "#323232"),
+    shadowRadius: CGFloat             = 4.0,
+    shadowOpacity: Float              = 0.38,
+    shadowOffset: CGSize              = CGSize(width: 1.0, height: 2.0),
+    fadeDuration: TimeInterval        = 0.4
   ) {
     self.backgroundColor      = backgroundColor
     self.messageColor         = messageColor
@@ -324,6 +353,11 @@ public struct QBToastStyle {
     self.maxHeightPercentage  = max(min(maxHeightPercentage, 1.0), 0.0)
     self.toastPadding         = toastPadding
     self.cornerRadius         = cornerRadius
+    self.shadowEnabled        = shadowEnabled
+    self.shadowColor          = shadowColor
+    self.shadowRadius         = shadowRadius
+    self.shadowOpacity        = shadowOpacity
+    self.shadowOffset         = shadowOffset
     self.fadeDuration         = fadeDuration
   }
 }
@@ -386,19 +420,6 @@ private extension UIView {
    */
   var safeArea: UIEdgeInsets {
     return UIApplication.shared.delegate?.window??.safeAreaInsets ?? .zero
-  }
-}
-
-extension CALayer {
-  /**
-   Round smooth corner for UIView
-   */
-  func roundCorner(radius: CGFloat) {
-    let path = UIBezierPath(roundedRect: self.bounds,
-                            cornerRadius: radius)
-    let layer = CAShapeLayer()
-    layer.path = path.cgPath
-    self.mask = layer
   }
 }
 

@@ -93,7 +93,13 @@ Predefined style are:
 | maxHeightPercentage | `CGFloat` | The maximum height of Toast view relative to it's superview. | `0.8` (`80%`)
 | toastPadding | `CGFloat` | The spacing from the horizontal and vertical edge of the Toast view to the content. | `16.0`
 | cornerRadius | `CGFloat` | The corner radius of the Toast view. | `4.0`
-| fadeDuration | `TimeInterval` | The fade in/out animation duration | `0.4`
+| fadeDuration | `TimeInterval` | The fade in/out animation duration. | `0.4` |
+| `v0.1.5~` | | |
+| shadowEnabled | `Bool` | Drop shadow for Toast. | `true` |
+| shadowColor | `UIColor` | The shadow color. | `#323232` |
+| shadowRadius | `CGFloat` | The shadow radius. | `4.0` |
+| shadowOpacity | `Float` | The shadow opacity. | `0.38` |
+| shadowOffset | `CGSize` | The shadow offset. | `CGSize(width: 1.0, height: 2.0)` |
 
 
 ## Installation
