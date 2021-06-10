@@ -56,9 +56,23 @@ class ViewController: UITableViewController {
                                                              style: .plain,
                                                              target: self,
                                                              action: #selector(setMessage))
+    self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Auto run",
+                                                            style: .plain,
+                                                            target: self,
+                                                            action: #selector(autoRun))
 
     self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: ReuseIdentifier.cell)
     tableView.tableFooterView = UIView()
+  }
+
+  @objc func autoRun() {
+    let message = userDefaults.string(forKey: ReuseStr.message)
+    QBToast(message: message, position: .top, duration: 2.5, state: .success).showToast()
+    QBToast(message: message, position: .center, duration: 3.0, state: .warning).showToast()
+    QBToast(message: message, position: .center, duration: 2.0, state: .error).showToast()
+    QBToast(message: message, position: .bottom, duration: 2.5).showToast()
+    QBToast(message: message, position: .bottom, duration: 3.5, state: .info).showToast()
+    QBToast(message: "Done... !!!", position: .top, duration: 2.5, state: .success).showToast()
   }
 
   @objc func setMessage() {

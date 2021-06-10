@@ -8,10 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0223E0BA9F83438D724EA2A1 /* Pods_QBToast_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F146C95B2593065AF671071 /* Pods_QBToast_Example.framework */; };
-		2E0B3D38266DBA7E0006574E /* screen-record.gif in Resources */ = {isa = PBXBuildFile; fileRef = 2E0B3D37266DBA7E0006574E /* screen-record.gif */; };
-		2E0B3D3C266DBABA0006574E /* default.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E0B3D39266DBABA0006574E /* default.png */; };
-		2E0B3D3D266DBABA0006574E /* success.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E0B3D3A266DBABA0006574E /* success.png */; };
-		2E0B3D3E266DBABA0006574E /* warning.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E0B3D3B266DBABA0006574E /* warning.png */; };
+		2EF8F6762671A6AC00E35710 /* screen-record.gif in Resources */ = {isa = PBXBuildFile; fileRef = 2EF8F6752671A6AC00E35710 /* screen-record.gif */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
@@ -34,10 +31,7 @@
 		1F146C95B2593065AF671071 /* Pods_QBToast_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_QBToast_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		209E6BE0D42FF91F75B98277 /* Pods-QBToast_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-QBToast_Example.release.xcconfig"; path = "Target Support Files/Pods-QBToast_Example/Pods-QBToast_Example.release.xcconfig"; sourceTree = "<group>"; };
 		239052E555CD4A150A16E207 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		2E0B3D37266DBA7E0006574E /* screen-record.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "screen-record.gif"; sourceTree = "<group>"; };
-		2E0B3D39266DBABA0006574E /* default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = default.png; sourceTree = "<group>"; };
-		2E0B3D3A266DBABA0006574E /* success.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = success.png; sourceTree = "<group>"; };
-		2E0B3D3B266DBABA0006574E /* warning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = warning.png; sourceTree = "<group>"; };
+		2EF8F6752671A6AC00E35710 /* screen-record.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "screen-record.gif"; sourceTree = "<group>"; };
 		43BD6101EFF094DA0E2CEA47 /* QBToast.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = QBToast.podspec; path = ../QBToast.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		56D41EBF7D157E0993FAFF63 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* QBToast_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QBToast_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -78,10 +72,7 @@
 		2E0B3D36266DA6750006574E /* Screenshots */ = {
 			isa = PBXGroup;
 			children = (
-				2E0B3D37266DBA7E0006574E /* screen-record.gif */,
-				2E0B3D39266DBABA0006574E /* default.png */,
-				2E0B3D3A266DBABA0006574E /* success.png */,
-				2E0B3D3B266DBABA0006574E /* warning.png */,
+				2EF8F6752671A6AC00E35710 /* screen-record.gif */,
 			);
 			name = Screenshots;
 			sourceTree = "<group>";
@@ -265,12 +256,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2E0B3D3E266DBABA0006574E /* warning.png in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
-				2E0B3D3D266DBABA0006574E /* success.png in Resources */,
-				2E0B3D38266DBA7E0006574E /* screen-record.gif in Resources */,
-				2E0B3D3C266DBABA0006574E /* default.png in Resources */,
+				2EF8F6762671A6AC00E35710 /* screen-record.gif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
