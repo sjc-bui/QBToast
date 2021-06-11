@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     UserDefaults.standard.register(defaults: [
       "position": 0,
-      "message": "This is sample Toast message",
+      "message": "This is a sample message.",
       "tapEnabled": true,
       "queueEnabled": true
     ])

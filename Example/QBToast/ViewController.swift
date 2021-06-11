@@ -12,7 +12,7 @@ import QBToast
 class ViewController: UITableViewController {
 
   var btn: UIButton?
-  let durations: [TimeInterval] = [1.0, 0.5, 2.0, 3.0, 4.0]
+  let durations: [TimeInterval] = [1.0, 1.5, 2.0, 3.0, 4.0]
   let basic: [String] = ["Top", "Center", "Bottom"]
   var states: [String] = []
   let mores: [String] = ["Tap to dismiss", "Toast queue"]
@@ -66,13 +66,12 @@ class ViewController: UITableViewController {
   }
 
   @objc func autoRun() {
-    let message = userDefaults.string(forKey: ReuseStr.message)
-    QBToast(message: message, position: .top, duration: 2.5, state: .success).showToast()
-    QBToast(message: message, position: .center, duration: 3.0, state: .warning).showToast()
-    QBToast(message: message, position: .center, duration: 2.0, state: .error).showToast()
-    QBToast(message: message, position: .bottom, duration: 2.5).showToast()
-    QBToast(message: message, position: .bottom, duration: 3.5, state: .info).showToast()
-    QBToast(message: "Done... !!!", position: .top, duration: 2.5, state: .success).showToast()
+    QBToast(message: "This is a success message.", position: .top, duration: 2.5, state: .success).showToast()
+    QBToast(message: "Consider this a warning.", position: .center, duration: 3.0, state: .warning).showToast()
+    QBToast(message: "This is an error message.", position: .center, duration: 2.0, state: .error).showToast()
+    QBToast(message: "This is a sample message.", position: .bottom, duration: 2.5).showToast()
+    QBToast(message: "This is an information message.", position: .bottom, duration: 3.5, state: .info).showToast()
+    QBToast(message: "Done...", position: .top, duration: 2.5, state: .success).showToast()
   }
 
   @objc func setMessage() {

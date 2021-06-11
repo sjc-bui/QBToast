@@ -82,7 +82,7 @@ Predefined style are:
 | --- | --- | --- | --- |
 | backgroundColor | `UIColor` | The background color of the Toast view. | `#323232`
 | messageColor | `UIColor` | The message color. | `.white`
-| messageFont | `UIFont` | The message font. | `.systemFont(ofSize: 14.0, weight: .medium)`
+| messageFont | `UIFont` | The message font. | `.systemFont(ofSize: 14.0, weight: .regular)`
 | messageNumberOfLines | `Int` | Number of lines. | `0`
 | messageAlignment | `NSTextAlignment` | Message alignment. | `.left`
 | maxWidthPercentage | `CGFloat` | The maximum width of Toast view relative to it's superview. | `0.8` (`80%`)
