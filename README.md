@@ -94,8 +94,8 @@ Predefined style are:
 | shadowEnabled | `Bool` | Drop shadow for Toast. | `true` |
 | shadowColor | `UIColor` | The shadow color. | `#323232` |
 | shadowRadius | `CGFloat` | The shadow radius. | `4.0` |
-| shadowOpacity | `Float` | The shadow opacity. | `0.38` |
-| shadowOffset | `CGSize` | The shadow offset. | `CGSize(width: 1.0, height: 2.0)` |
+| shadowOpacity | `Float` | The shadow opacity. | `0.3` |
+| shadowOffset | `CGSize` | The shadow offset. | `CGSize.zero` |
 
 
 ## Installation
