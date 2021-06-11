@@ -340,8 +340,8 @@ public struct QBToastStyle {
     shadowEnabled: Bool               = true,
     shadowColor: UIColor              = UIColor(hex: "#323232"),
     shadowRadius: CGFloat             = 4.0,
-    shadowOpacity: Float              = 0.38,
-    shadowOffset: CGSize              = CGSize(width: 1.0, height: 2.0),
+    shadowOpacity: Float              = 0.3,
+    shadowOffset: CGSize              = CGSize.zero,
     fadeDuration: TimeInterval        = 0.4
   ) {
     self.backgroundColor      = backgroundColor
