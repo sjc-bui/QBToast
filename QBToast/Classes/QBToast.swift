@@ -26,6 +26,8 @@ import ObjectiveC
 
 public typealias QBToastCompletion = ((Bool) -> Void)?
 
+public typealias Manager = QBToastManager
+
 public class QBToast: UIViewController {
 
   public var message: String?
@@ -49,10 +51,10 @@ public class QBToast: UIViewController {
   }
 
   public init(message: String?,
-              style: QBToastStyle = QBToastManager.shared.style,
-              position: QBToastPosition = QBToastManager.shared.position,
-              duration: TimeInterval = QBToastManager.shared.duration,
-              state: QBToastState = QBToastManager.shared.state) {
+              style: QBToastStyle = Manager.shared.style,
+              position: QBToastPosition = Manager.shared.position,
+              duration: TimeInterval = Manager.shared.duration,
+              state: QBToastState = Manager.shared.state) {
     self.message  = message
     self.style    = style
     self.position = position
@@ -92,8 +94,7 @@ public class QBToast: UIViewController {
       let toast = try createToastView(message: message, style: style, state: state, window: window)
       self.completionHandler = completionHandler
 
-      if QBToastManager.shared.inQueueEnabled,
-         activeToasts.count > 0 {
+      if Manager.shared.inQueueEnabled, activeToasts.count > 0 {
         objc_setAssociatedObject(toast, &QBToastKey.position,
                                  NSNumber(value: position.rawValue),
                                  .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -102,8 +103,7 @@ public class QBToast: UIViewController {
                                  .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         queue.add(toast)
       } else {
-        self.show(toast: toast, duration: duration,
-                  position: position, window: window)
+        self.show(toast: toast, duration: duration, position: position, window: window)
       }
     } catch QBToastError.messageIsNil {
       print("Toast message is required!")
@@ -111,10 +111,8 @@ public class QBToast: UIViewController {
   }
 
   // MARK: - Create Toast View
-  private func createToastView(message: String?,
-                               style: QBToastStyle,
-                               state: QBToastState,
-                               window: UIWindow) throws -> UIView {
+  private func createToastView(message: String?, style: QBToastStyle,
+                               state: QBToastState, window: UIWindow) throws -> UIView {
     guard message != nil else { throw QBToastError.messageIsNil }
 
     var messageLabel: UILabel?
@@ -173,16 +171,14 @@ public class QBToast: UIViewController {
   }
 
   // MARK: - Show Toast
-  private func show(toast: UIView,
-                    duration: TimeInterval,
-                    position: QBToastPosition,
-                    window: UIWindow) {
-    let endpoint   = position.centerPoint(forToastView: toast, inSuperView: window)
+  private func show(toast: UIView, duration: TimeInterval,
+                    position: QBToastPosition, window: UIWindow) {
+    let endpoint = position.centerPoint(forToastView: toast, inSuperView: window)
     toast.alpha = 0
     toast.center = endpoint
     toast.transform = CGAffineTransform(scaleX: 0.66, y: 0.66)
 
-    if QBToastManager.shared.tapToDismissEnabled {
+    if Manager.shared.tapToDismissEnabled {
       let toastRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapToDismiss(_:)))
       toast.addGestureRecognizer(toastRecognizer)
       toast.isUserInteractionEnabled = true
@@ -192,9 +188,7 @@ public class QBToast: UIViewController {
     activeToasts.add(toast)
     window.addSubview(toast)
 
-    UIView.animate(withDuration: 0.086,
-                   delay: 0.0,
-                   options: .curveEaseIn) {
+    UIView.animate(withDuration: 0.086, delay: 0.0, options: .curveEaseIn) {
       toast.alpha = 1
       toast.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
     } completion: { _ in
@@ -214,8 +208,7 @@ public class QBToast: UIViewController {
   }
 
   @objc func toastTimer(_ timer: Timer) {
-    guard let toast = timer.userInfo as? UIView,
-          activeToasts.contains(toast) else { return }
+    guard let toast = timer.userInfo as? UIView, activeToasts.contains(toast) else { return }
     self.hide(toast)
   }
 
@@ -227,9 +220,7 @@ public class QBToast: UIViewController {
       timer.invalidate()
     }
 
-    UIView.animate(withDuration: 0.11,
-                   delay: 0.0,
-                   options: .curveEaseOut) {
+    UIView.animate(withDuration: 0.11, delay: 0.0, options: .curveEaseOut) {
       toast.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
       toast.alpha = 0
     } completion: { _ in
@@ -242,8 +233,7 @@ public class QBToast: UIViewController {
          let duration = objc_getAssociatedObject(nextToast, &QBToastKey.duration) as? NSNumber {
         if let toastPosition = QBToastPosition(rawValue: position.intValue) {
           self.queue.removeObject(at: 0)
-          self.show(toast: nextToast, duration: duration.doubleValue,
-                    position: toastPosition, window: window)
+          self.show(toast: nextToast, duration: duration.doubleValue, position: toastPosition, window: window)
         }
       }
     }
@@ -391,22 +381,18 @@ public enum QBToastPosition: Int, CaseIterable {
   case bottom = 2
 
   /** `Toast` display in center point*/
-  fileprivate func centerPoint(forToastView    toast: UIView,
-                               inSuperView superview: UIView) -> CGPoint {
-
-    let topPadding    = QBToastManager.shared.style.toastPadding + superview.safeArea.top
-    let bottomPadding = QBToastManager.shared.style.toastPadding + superview.safeArea.bottom
+  fileprivate func centerPoint(forToastView toast: UIView, inSuperView view: UIView) -> CGPoint {
+    let topPadding    = Manager.shared.style.toastPadding + view.safeArea.top
+    let bottomPadding = Manager.shared.style.toastPadding + view.safeArea.bottom
 
     switch self {
     case .top:
-      return CGPoint(x: superview.bounds.size.width / 2,
-                     y: (toast.frame.size.height / 2) + topPadding)
+      return CGPoint(x: view.bounds.size.width / 2, y: (toast.frame.size.height / 2) + topPadding)
     case .center:
-      return CGPoint(x: superview.bounds.size.width / 2,
-                     y: superview.bounds.size.height / 2)
+      return CGPoint(x: view.bounds.size.width / 2, y: view.bounds.size.height / 2)
     case .bottom:
-      return CGPoint(x: superview.bounds.size.width / 2,
-                     y: superview.bounds.size.height - (toast.frame.size.height / 2) - bottomPadding)
+      return CGPoint(x: view.bounds.size.width / 2,
+                     y: view.bounds.size.height - (toast.frame.size.height / 2) - bottomPadding)
     }
   }
 }
