@@ -155,28 +155,13 @@ public class QBToast: UIViewController {
                             y: 0.0,
                             width: messageRect.size.width   + (style.toastPadding * 2),
                             height: messageRect.size.height + (style.toastPadding * 2))
-    switch state {
-    case .success:
-      wrapView.backgroundColor = UIColor.success
-    case .warning:
-      wrapView.backgroundColor = UIColor.warning
-    case .error:
-      wrapView.backgroundColor = UIColor.error
-    case .info:
-      wrapView.backgroundColor = UIColor.info
-    case .custom:
-      wrapView.backgroundColor = style.backgroundColor
-    }
 
+    wrapView.backgroundColor = toastBackgroundColor(state)
     wrapView.layer.cornerRadius = style.cornerRadius
 
     if style.shadowEnabled {
-      wrapView.clipsToBounds       = true
-      wrapView.layer.shadowColor   = style.shadowColor.cgColor
-      wrapView.layer.shadowOffset  = style.shadowOffset
-      wrapView.layer.shadowOpacity = style.shadowOpacity
-      wrapView.layer.shadowRadius  = style.shadowRadius
-      wrapView.layer.masksToBounds = false
+      wrapView.dropShadow(color: style.shadowColor, offset: style.shadowOffset,
+                          opacity: style.shadowOpacity, radius: style.shadowRadius)
     }
 
     if let messageLabel = messageLabel {
@@ -261,6 +246,21 @@ public class QBToast: UIViewController {
                     position: toastPosition, window: window)
         }
       }
+    }
+  }
+
+  private func toastBackgroundColor(_ state: QBToastState) -> UIColor {
+    switch state {
+    case .success:
+      return UIColor.success
+    case .warning:
+      return UIColor.warning
+    case .error:
+      return UIColor.error
+    case .info:
+      return UIColor.info
+    case .custom:
+      return style.backgroundColor
     }
   }
 }
@@ -398,15 +398,15 @@ public enum QBToastPosition: Int, CaseIterable {
     let bottomPadding = QBToastManager.shared.style.toastPadding + superview.safeArea.bottom
 
     switch self {
-      case .top:
-        return CGPoint(x: superview.bounds.size.width / 2,
-                       y: (toast.frame.size.height / 2) + topPadding)
-      case .center:
-        return CGPoint(x: superview.bounds.size.width / 2,
-                       y: superview.bounds.size.height / 2)
-      case .bottom:
-        return CGPoint(x: superview.bounds.size.width / 2,
-                       y: superview.bounds.size.height - (toast.frame.size.height / 2) - bottomPadding)
+    case .top:
+      return CGPoint(x: superview.bounds.size.width / 2,
+                     y: (toast.frame.size.height / 2) + topPadding)
+    case .center:
+      return CGPoint(x: superview.bounds.size.width / 2,
+                     y: superview.bounds.size.height / 2)
+    case .bottom:
+      return CGPoint(x: superview.bounds.size.width / 2,
+                     y: superview.bounds.size.height - (toast.frame.size.height / 2) - bottomPadding)
     }
   }
 }
@@ -416,6 +416,15 @@ private extension UIView {
   /** Get safeAreaInsets*/
   var safeArea: UIEdgeInsets {
     return UIApplication.shared.delegate?.window??.safeAreaInsets ?? .zero
+  }
+
+  func dropShadow(color: UIColor, offset: CGSize, opacity: Float, radius: CGFloat) {
+    self.clipsToBounds       = true
+    self.layer.shadowColor   = color.cgColor
+    self.layer.shadowOffset  = offset
+    self.layer.shadowOpacity = opacity
+    self.layer.shadowRadius  = radius
+    self.layer.masksToBounds = false
   }
 }
 
