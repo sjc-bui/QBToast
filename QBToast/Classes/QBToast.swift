@@ -67,26 +67,22 @@ public class QBToast: UIViewController {
 
   // Toast message queue
   private var queue: NSMutableArray {
-    get {
-      if let queue = objc_getAssociatedObject(UIView.self, &QBToastKey.queue) as? NSMutableArray {
-        return queue
-      } else {
-        let queue = NSMutableArray()
-        objc_setAssociatedObject(UIView.self, &QBToastKey.queue, queue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return queue
-      }
+    if let queue = objc_getAssociatedObject(UIView.self, &QBToastKey.queue) as? NSMutableArray {
+      return queue
+    } else {
+      let queue = NSMutableArray()
+      objc_setAssociatedObject(UIView.self, &QBToastKey.queue, queue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+      return queue
     }
   }
 
   private var activeToasts: NSMutableArray {
-    get {
-      if let activeToasts = objc_getAssociatedObject(UIView.self, &QBToastKey.active) as? NSMutableArray {
-        return activeToasts
-      } else {
-        let activeToasts = NSMutableArray()
-        objc_setAssociatedObject(UIView.self, &QBToastKey.active, activeToasts, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return activeToasts
-      }
+    if let activeToasts = objc_getAssociatedObject(UIView.self, &QBToastKey.active) as? NSMutableArray {
+    return activeToasts
+    } else {
+    let activeToasts = NSMutableArray()
+    objc_setAssociatedObject(UIView.self, &QBToastKey.active, activeToasts, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    return activeToasts
     }
   }
 
@@ -98,8 +94,12 @@ public class QBToast: UIViewController {
 
       if QBToastManager.shared.inQueueEnabled,
          activeToasts.count > 0 {
-        objc_setAssociatedObject(toast, &QBToastKey.position, NSNumber(value: position.rawValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(toast, &QBToastKey.duration, NSNumber(value: duration), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(toast, &QBToastKey.position,
+                                 NSNumber(value: position.rawValue),
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(toast, &QBToastKey.duration,
+                                 NSNumber(value: duration),
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         queue.add(toast)
       } else {
         self.show(toast: toast, duration: duration,
@@ -130,11 +130,11 @@ public class QBToast: UIViewController {
       messageLabel?.lineBreakMode   = .byTruncatingTail
       messageLabel?.backgroundColor = .clear
 
-      let maxSize = CGSize(width : window.bounds.size.width  * style.maxWidthPercentage,
+      let maxSize = CGSize(width: window.bounds.size.width  * style.maxWidthPercentage,
                            height: window.bounds.size.height * style.maxHeightPercentage)
       let messageSize = messageLabel?.sizeThatFits(maxSize)
       if let messageSize = messageSize {
-        let actualWidth  = min(messageSize.width , maxSize.width)
+        let actualWidth  = min(messageSize.width, maxSize.width)
         let actualHeight = min(messageSize.height, maxSize.height)
         messageLabel?.frame = CGRect(x: 0.0, y: 0.0, width: actualWidth, height: actualHeight)
       }
@@ -349,7 +349,7 @@ public struct QBToastStyle {
     self.messageFont          = messageFont
     self.messageNumberOfLines = messageNumberOfLines
     self.messageAlignment     = messageAlignment
-    self.maxWidthPercentage   = max(min(maxWidthPercentage , 1.0), 0.0)
+    self.maxWidthPercentage   = max(min(maxWidthPercentage, 1.0), 0.0)
     self.maxHeightPercentage  = max(min(maxHeightPercentage, 1.0), 0.0)
     self.toastPadding         = toastPadding
     self.cornerRadius         = cornerRadius
@@ -415,9 +415,7 @@ public enum QBToastPosition: Int, CaseIterable {
 
 // MARK: - Extension
 private extension UIView {
-  /**
-   Get safeAreaInsets
-   */
+  /** Get safeAreaInsets*/
   var safeArea: UIEdgeInsets {
     return UIApplication.shared.delegate?.window??.safeAreaInsets ?? .zero
   }
@@ -432,12 +430,12 @@ public extension UIColor {
   /// - Parameter hexString: hex string
   convenience init(hex hexString: String) {
     var color: UInt32 = 0
-    var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0
+    var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0
     if Scanner(string: hexString.replacingOccurrences(of: "#", with: "")).scanHexInt32(&color) {
-      r = CGFloat((color & 0xFF0000) >> 16) / 255.0
-      g = CGFloat((color & 0x00FF00) >>  8) / 255.0
-      b = CGFloat( color & 0x0000FF) / 255.0
+      red = CGFloat((color & 0xFF0000) >> 16) / 255.0
+      green = CGFloat((color & 0x00FF00) >>  8) / 255.0
+      blue = CGFloat( color & 0x0000FF) / 255.0
     }
-    self.init(red: r, green: g, blue: b, alpha: 1.0)
+    self.init(red: red, green: green, blue: blue, alpha: 1.0)
   }
 }
