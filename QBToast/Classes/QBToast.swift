@@ -25,7 +25,6 @@ import UIKit
 import ObjectiveC
 
 public typealias QBToastCompletion = ((Bool) -> Void)?
-
 public typealias Manager = QBToastManager
 
 public class QBToast: UIViewController {
@@ -95,11 +94,9 @@ public class QBToast: UIViewController {
       self.completionHandler = completionHandler
 
       if Manager.shared.inQueueEnabled, activeToasts.count > 0 {
-        objc_setAssociatedObject(toast, &QBToastKey.position,
-                                 NSNumber(value: position.rawValue),
+        objc_setAssociatedObject(toast, &QBToastKey.position, NSNumber(value: position.rawValue),
                                  .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        objc_setAssociatedObject(toast, &QBToastKey.duration,
-                                 NSNumber(value: duration),
+        objc_setAssociatedObject(toast, &QBToastKey.duration, NSNumber(value: duration),
                                  .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         queue.add(toast)
       } else {
@@ -145,12 +142,9 @@ public class QBToast: UIViewController {
     }
 
     let wrapView = UIView()
-    wrapView.autoresizingMask = [.flexibleTopMargin,
-                                 .flexibleRightMargin,
-                                 .flexibleBottomMargin,
-                                 .flexibleLeftMargin]
-    wrapView.frame = CGRect(x: 0.0,
-                            y: 0.0,
+    wrapView.autoresizingMask = [.flexibleTopMargin, .flexibleRightMargin,
+                                 .flexibleBottomMargin, .flexibleLeftMargin]
+    wrapView.frame = CGRect(x: 0.0, y: 0.0,
                             width: messageRect.size.width   + (style.toastPadding * 2),
                             height: messageRect.size.height + (style.toastPadding * 2))
 
@@ -215,7 +209,6 @@ public class QBToast: UIViewController {
   // MARK: - Hide Toast
   private func hide(_ toast: UIView, byTap: Bool = false) {
     guard let window = UIApplication.shared.keyWindow else { return }
-
     if let timer = objc_getAssociatedObject(toast, &QBToastKey.timer) as? Timer {
       timer.invalidate()
     }
@@ -384,7 +377,6 @@ public enum QBToastPosition: Int, CaseIterable {
   fileprivate func centerPoint(forToastView toast: UIView, inSuperView view: UIView) -> CGPoint {
     let topPadding    = Manager.shared.style.toastPadding + view.safeArea.top
     let bottomPadding = Manager.shared.style.toastPadding + view.safeArea.bottom
-
     switch self {
     case .top:
       return CGPoint(x: view.bounds.size.width / 2, y: (toast.frame.size.height / 2) + topPadding)
@@ -419,7 +411,6 @@ public extension UIColor {
   static let warning = UIColor(hex: "#ff9800")
   static let error   = UIColor(hex: "#f44336")
   static let info    = UIColor(hex: "#2196f3")
-
   /// - Parameter hexString: hex string
   convenience init(hex hexString: String) {
     var color: UInt32 = 0
