@@ -78,11 +78,11 @@ public class QBToast: UIViewController {
 
   private var activeToasts: NSMutableArray {
     if let activeToasts = objc_getAssociatedObject(UIView.self, &QBToastKey.active) as? NSMutableArray {
-    return activeToasts
+      return activeToasts
     } else {
-    let activeToasts = NSMutableArray()
-    objc_setAssociatedObject(UIView.self, &QBToastKey.active, activeToasts, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-    return activeToasts
+      let activeToasts = NSMutableArray()
+      objc_setAssociatedObject(UIView.self, &QBToastKey.active, activeToasts, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+      return activeToasts
     }
   }
 
@@ -115,9 +115,7 @@ public class QBToast: UIViewController {
                                style: QBToastStyle,
                                state: QBToastState,
                                window: UIWindow) throws -> UIView {
-    guard message != nil else {
-      throw QBToastError.messageIsNil
-    }
+    guard message != nil else { throw QBToastError.messageIsNil }
 
     var messageLabel: UILabel?
     if let message = message {
@@ -158,16 +156,16 @@ public class QBToast: UIViewController {
                             width: messageRect.size.width   + (style.toastPadding * 2),
                             height: messageRect.size.height + (style.toastPadding * 2))
     switch state {
-      case .success:
-        wrapView.backgroundColor = UIColor.success
-      case .warning:
-        wrapView.backgroundColor = UIColor.warning
-      case .error:
-        wrapView.backgroundColor = UIColor.error
-      case .info:
-        wrapView.backgroundColor = UIColor.info
-      case .custom:
-        wrapView.backgroundColor = style.backgroundColor
+    case .success:
+      wrapView.backgroundColor = UIColor.success
+    case .warning:
+      wrapView.backgroundColor = UIColor.warning
+    case .error:
+      wrapView.backgroundColor = UIColor.error
+    case .info:
+      wrapView.backgroundColor = UIColor.info
+    case .custom:
+      wrapView.backgroundColor = style.backgroundColor
     }
 
     wrapView.layer.cornerRadius = style.cornerRadius
@@ -206,7 +204,7 @@ public class QBToast: UIViewController {
       toast.isExclusiveTouch = true
     }
 
-    activeToasts.add (toast)
+    activeToasts.add(toast)
     window.addSubview(toast)
 
     UIView.animate(withDuration: 0.086,
@@ -236,7 +234,7 @@ public class QBToast: UIViewController {
     self.hide(toast)
   }
 
-  // MARK: -  Hide Toast
+  // MARK: - Hide Toast
   private func hide(_ toast: UIView, byTap: Bool = false) {
     guard let window = UIApplication.shared.keyWindow else { return }
 
