@@ -247,7 +247,7 @@ public class QBToast: UIViewController {
     UIView.animate(withDuration: 0.11,
                    delay: 0.0,
                    options: .curveEaseOut) {
-      toast.transform = CGAffineTransform(scaleX: 0.68, y: 0.68)
+      toast.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
       toast.alpha = 0
     } completion: { _ in
       self.activeToasts.remove(toast)
@@ -330,7 +330,7 @@ public struct QBToastStyle {
   public init(
     backgroundColor: UIColor          = UIColor(hex: "#323232"),
     messageColor: UIColor             = .white,
-    messageFont: UIFont               = .systemFont(ofSize: 14.0, weight: .medium),
+    messageFont: UIFont               = .systemFont(ofSize: 14.0, weight: .regular),
     messageNumberOfLines: Int         = 0,
     messageAlignment: NSTextAlignment = .left,
     maxWidthPercentage: CGFloat       = 0.8,
