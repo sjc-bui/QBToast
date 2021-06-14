@@ -24,7 +24,6 @@
 import UIKit
 import ObjectiveC
 
-public typealias QBToastCompletion = ((Bool) -> Void)?
 public typealias Manager = QBToastManager
 
 public class QBToast: UIViewController {
@@ -39,7 +38,7 @@ public class QBToast: UIViewController {
 
   public var state: QBToastState
 
-  var completionHandler: QBToastCompletion = nil
+  var completionHandler: ((Bool) -> Void)?
 
   private struct QBToastKey {
     static var timer    = "timer"
@@ -87,7 +86,7 @@ public class QBToast: UIViewController {
     }
   }
 
-  public func showToast(completionHandler: QBToastCompletion = nil) {
+  public func showToast(completionHandler: ((Bool) -> Void)? = nil) {
     do {
       guard let window = UIApplication.shared.keyWindow else { return }
       let toast = try createToastView(message: message, style: style, state: state, window: window)
