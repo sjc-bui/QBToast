@@ -1,7 +1,6 @@
 # QBToast
 
 [![CI](https://github.com/sjc-bui/QBToast/actions/workflows/ci.yml/badge.svg)](https://github.com/sjc-bui/QBToast/actions/workflows/ci.yml)
-[![SwiftLint](https://github.com/sjc-bui/QBToast/actions/workflows/swiftlint.yml/badge.svg)](https://github.com/sjc-bui/QBToast/actions/workflows/swiftlint.yml)
 [![Version](https://img.shields.io/cocoapods/v/QBToast.svg?style=flat)](https://cocoapods.org/pods/QBToast)
 [![License](https://img.shields.io/cocoapods/l/QBToast.svg?style=flat)](https://cocoapods.org/pods/QBToast)
 [![Platform](https://img.shields.io/cocoapods/p/QBToast.svg?style=flat)](https://cocoapods.org/pods/QBToast)
