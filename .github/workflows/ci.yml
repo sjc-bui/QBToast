@@ -12,7 +12,10 @@ jobs:
     runs-on: macos-latest
 
     steps:
+    - name: Repository checkout
     - uses: actions/checkout@v2
+    - name: Lint
+      run: swiftlint
     - name: Select Xcode version
       run: sudo xcode-select -switch /Applications/Xcode.app
     - name: Show Xcode version
