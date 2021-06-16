@@ -1,6 +1,6 @@
 {
   "name": "QBToast",
-  "version": "0.1.4",
+  "version": "0.1.7",
   "summary": "Toast message for iOS",
   "description": "TODO: Toast message for iOS written in Swift.",
   "homepage": "https://github.com/sjc-bui/QBToast",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/sjc-bui/QBToast.git",
-    "tag": "0.1.4"
+    "tag": "0.1.7"
   },
   "platforms": {
     "ios": "11.0"

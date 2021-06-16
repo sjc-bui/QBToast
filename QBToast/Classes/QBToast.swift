@@ -26,7 +26,7 @@ import ObjectiveC
 
 public typealias Manager = QBToastManager
 
-public class QBToast: UIViewController {
+public final class QBToast: UIViewController {
 
   public var message: String?
 
@@ -38,7 +38,11 @@ public class QBToast: UIViewController {
 
   public var state: QBToastState
 
-  var completionHandler: ((Bool) -> Void)?
+  private var initialCenter: CGPoint = .zero
+
+  private var originalPoint: CGPoint = .zero
+
+  private var completionHandler: ((Bool) -> Void)?
 
   private struct QBToastKey {
     static var timer    = "timer"
@@ -176,6 +180,8 @@ public class QBToast: UIViewController {
       toast.addGestureRecognizer(toastRecognizer)
       toast.isUserInteractionEnabled = true
       toast.isExclusiveTouch = true
+    } else {
+      toast.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:))))
     }
 
     activeToasts.add(toast)
@@ -192,6 +198,31 @@ public class QBToast: UIViewController {
                         repeats: false)
       RunLoop.main.add(timer, forMode: .common)
       objc_setAssociatedObject(toast, &QBToastKey.timer, timer, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    }
+  }
+
+  @objc func panGesture(_ sender: UIPanGestureRecognizer) {
+    guard let toast = sender.view else { return }
+    switch sender.state {
+    case .began:
+      self.initialCenter = toast.center
+      self.originalPoint = toast.center
+    case .changed:
+      let translation = sender.translation(in: toast.superview)
+      toast.center = CGPoint(x: initialCenter.x,
+                             y: initialCenter.y + translation.y)
+    case .ended, .cancelled:
+      UIView.animate(withDuration: 0.25,
+                     delay: 0.0,
+                     usingSpringWithDamping: 1.0,
+                     initialSpringVelocity: 0.0,
+                     options: .curveLinear) {
+        toast.center = self.originalPoint
+      } completion: { _ in
+        self.hide(toast)
+      }
+    default:
+      break
     }
   }
 
