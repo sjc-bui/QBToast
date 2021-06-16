@@ -153,6 +153,9 @@ public final class QBToast: UIViewController {
 
     wrapView.backgroundColor = toastBackgroundColor(state)
     wrapView.layer.cornerRadius = style.cornerRadius
+    if #available(iOS 13, *) {
+      wrapView.layer.cornerCurve = .continuous
+    }
 
     if style.shadowEnabled {
       wrapView.dropShadow(color: style.shadowColor, offset: style.shadowOffset,
@@ -209,7 +212,7 @@ public final class QBToast: UIViewController {
     case .changed:
       let translation = sender.translation(in: toast.superview)
       toast.center = CGPoint(x: initialCenter.x,
-                             y: initialCenter.y + translation.y)
+                             y: initialCenter.y + (translation.y / 4.0))
     case .ended, .cancelled:
       UIView.animate(withDuration: 0.25,
                      delay: 0.0,
