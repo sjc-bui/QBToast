@@ -36,9 +36,9 @@ public final class QBToast: UIViewController {
 
   public var duration: TimeInterval
 
-  public var state: QBToastState
-
   public var haptic: QBToastHaptic
+
+  public var state: QBToastState
 
   private var initialCenter: CGPoint = .zero
 
@@ -65,8 +65,8 @@ public final class QBToast: UIViewController {
     self.style    = style
     self.position = position
     self.duration = duration
-    self.state    = state
     self.haptic   = haptic
+    self.state    = state
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -220,8 +220,9 @@ public final class QBToast: UIViewController {
     case .changed:
       let translation = sender.translation(in: toast.superview)
       toast.center = CGPoint(x: initialCenter.x,
-                             y: initialCenter.y + (translation.y / 4.0))
-    case .ended, .cancelled:
+                             y: initialCenter.y + (translation.y / 3.0))
+    case .ended,
+         .cancelled:
       UIView.animate(withDuration: 0.25,
                      delay: 0.0,
                      usingSpringWithDamping: 1.0,
