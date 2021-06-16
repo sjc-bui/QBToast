@@ -38,7 +38,7 @@ public final class QBToast: UIViewController {
 
   public var state: QBToastState
 
-  private var haptic: QBToastHaptic
+  public var haptic: QBToastHaptic
 
   private var initialCenter: CGPoint = .zero
 
@@ -59,13 +59,14 @@ public final class QBToast: UIViewController {
               style: QBToastStyle = Manager.shared.style,
               position: QBToastPosition = Manager.shared.position,
               duration: TimeInterval = Manager.shared.duration,
+              haptic: QBToastHaptic = Manager.shared.haptic,
               state: QBToastState = Manager.shared.state) {
     self.message  = message
     self.style    = style
     self.position = position
     self.duration = duration
     self.state    = state
-    self.haptic   = state.getHaptic()
+    self.haptic   = haptic
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -301,27 +302,15 @@ public enum QBToastState: Int, CaseIterable {
   case error   = 2
   case info    = 3
   case custom  = 4
-
-  func getHaptic() -> QBToastHaptic {
-    switch self {
-    case .success:
-      return .success
-    case .warning:
-      return .warning
-    case .error:
-      return .error
-    default:
-      return .custom
-    }
-  }
 }
 
 public enum QBToastHaptic: Int {
   case success = 0
   case warning = 1
   case error   = 2
-  case info    = 3
-  case custom  = 4
+  case light   = 3
+  case medium  = 4
+  case none    = 5
 
   func impact() {
     let generator = UINotificationFeedbackGenerator()
@@ -332,9 +321,14 @@ public enum QBToastHaptic: Int {
       generator.notificationOccurred(.warning)
     case .error:
       generator.notificationOccurred(.error)
-    default:
+    case .light:
       let impactGen = UIImpactFeedbackGenerator(style: .light)
       impactGen.impactOccurred()
+    case .medium:
+      let impactGen = UIImpactFeedbackGenerator(style: .medium)
+      impactGen.impactOccurred()
+    default:
+      break;
     }
   }
 }
@@ -437,8 +431,8 @@ public class QBToastManager {
   /** Toast display position `Default .bottom`*/
   public var position: QBToastPosition = .bottom
 
-  /** Haptic `Default true`*/
-  public var hapticEnabled: Bool = true
+  /** Haptic feedback `Default .none`*/
+  public var haptic: QBToastHaptic = .none
 
   /** Enable tap action to dismiss toast `Default true`*/
   public var tapToDismissEnabled: Bool = true
