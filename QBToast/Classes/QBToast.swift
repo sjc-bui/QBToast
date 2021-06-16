@@ -313,6 +313,7 @@ public enum QBToastHaptic: Int {
   case none    = 5
 
   func impact() {
+    #if os(iOS)
     let generator = UINotificationFeedbackGenerator()
     switch self {
     case .success:
@@ -327,9 +328,10 @@ public enum QBToastHaptic: Int {
     case .medium:
       let impactGen = UIImpactFeedbackGenerator(style: .medium)
       impactGen.impactOccurred()
-    default:
+    case .none:
       break;
     }
+    #endif
   }
 }
 
