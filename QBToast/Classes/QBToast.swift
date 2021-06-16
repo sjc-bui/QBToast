@@ -180,9 +180,8 @@ public final class QBToast: UIViewController {
       toast.addGestureRecognizer(toastRecognizer)
       toast.isUserInteractionEnabled = true
       toast.isExclusiveTouch = true
-    } else {
-      toast.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:))))
     }
+    toast.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:))))
 
     activeToasts.add(toast)
     window.addSubview(toast)
@@ -218,8 +217,8 @@ public final class QBToast: UIViewController {
                      initialSpringVelocity: 0.0,
                      options: .curveLinear) {
         toast.center = self.originalPoint
-      } completion: { _ in
-        self.hide(toast)
+      } completion: { [weak self] success in
+        self?.hide(toast)
       }
     default:
       break
