@@ -38,6 +38,8 @@ public final class QBToast: UIViewController {
 
   public var state: QBToastState
 
+  private var haptic: QBToastHaptic
+
   private var initialCenter: CGPoint = .zero
 
   private var originalPoint: CGPoint = .zero
@@ -50,6 +52,7 @@ public final class QBToast: UIViewController {
     static var active   = "active"
     static var position = "position"
     static var duration = "duration"
+    static var haptic   = "haptic"
   }
 
   public init(message: String?,
@@ -62,6 +65,7 @@ public final class QBToast: UIViewController {
     self.position = position
     self.duration = duration
     self.state    = state
+    self.haptic   = state.getHaptic()
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -101,9 +105,11 @@ public final class QBToast: UIViewController {
                                  .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         objc_setAssociatedObject(toast, &QBToastKey.duration, NSNumber(value: duration),
                                  .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        objc_setAssociatedObject(toast, &QBToastKey.haptic, NSNumber(value: haptic.rawValue),
+                                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         queue.add(toast)
       } else {
-        self.show(toast: toast, duration: duration, position: position, window: window)
+        self.show(toast: toast, duration: duration, position: position, haptic: haptic, window: window)
       }
     } catch QBToastError.messageIsNil {
       print("Toast message is required!")
@@ -172,7 +178,7 @@ public final class QBToast: UIViewController {
 
   // MARK: - Show Toast
   private func show(toast: UIView, duration: TimeInterval,
-                    position: QBToastPosition, window: UIWindow) {
+                    position: QBToastPosition, haptic: QBToastHaptic, window: UIWindow) {
     let endpoint = position.centerPoint(forToastView: toast, inSuperView: window)
     toast.alpha = 0
     toast.center = endpoint
@@ -188,6 +194,7 @@ public final class QBToast: UIViewController {
 
     activeToasts.add(toast)
     window.addSubview(toast)
+    haptic.impact()
 
     UIView.animate(withDuration: 0.086, delay: 0.0, options: .curveEaseIn) {
       toast.alpha = 1
@@ -255,10 +262,12 @@ public final class QBToast: UIViewController {
 
       if let nextToast = self.queue.firstObject as? UIView,
          let position = objc_getAssociatedObject(nextToast, &QBToastKey.position) as? NSNumber,
-         let duration = objc_getAssociatedObject(nextToast, &QBToastKey.duration) as? NSNumber {
-        if let toastPosition = QBToastPosition(rawValue: position.intValue) {
+         let duration = objc_getAssociatedObject(nextToast, &QBToastKey.duration) as? NSNumber,
+         let haptic   = objc_getAssociatedObject(nextToast, &QBToastKey.haptic)   as? NSNumber {
+        if let toastPosition = QBToastPosition(rawValue: position.intValue),
+           let hapticType = QBToastHaptic(rawValue: haptic.intValue) {
           self.queue.removeObject(at: 0)
-          self.show(toast: nextToast, duration: duration.doubleValue, position: toastPosition, window: window)
+          self.show(toast: nextToast, duration: duration.doubleValue, position: toastPosition, haptic: hapticType, window: window)
         }
       }
     }
@@ -292,6 +301,42 @@ public enum QBToastState: Int, CaseIterable {
   case error   = 2
   case info    = 3
   case custom  = 4
+
+  func getHaptic() -> QBToastHaptic {
+    switch self {
+    case .success:
+      return .success
+    case .warning:
+      return .warning
+    case .error:
+      return .error
+    default:
+      return .custom
+    }
+  }
+}
+
+public enum QBToastHaptic: Int {
+  case success = 0
+  case warning = 1
+  case error   = 2
+  case info    = 3
+  case custom  = 4
+
+  func impact() {
+    let generator = UINotificationFeedbackGenerator()
+    switch self {
+    case .success:
+      generator.notificationOccurred(.success)
+    case .warning:
+      generator.notificationOccurred(.warning)
+    case .error:
+      generator.notificationOccurred(.error)
+    default:
+      let impactGen = UIImpactFeedbackGenerator(style: .light)
+      impactGen.impactOccurred()
+    }
+  }
 }
 
 // MARK: - Toast Style
@@ -391,6 +436,9 @@ public class QBToastManager {
 
   /** Toast display position `Default .bottom`*/
   public var position: QBToastPosition = .bottom
+
+  /** Haptic `Default true`*/
+  public var hapticEnabled: Bool = true
 
   /** Enable tap action to dismiss toast `Default true`*/
   public var tapToDismissEnabled: Bool = true
