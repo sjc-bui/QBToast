@@ -44,6 +44,12 @@ Toast message with specific duration.
 QBToast(message: "Your message", duration: 5.0).showToast()
 ```
 
+Haptic feedback when toast appear, `v0.1.8~`.
+```swift
+QBToast(message: "Your message",
+        duration: 2.5, haptic: .success, state: .success).showToast()
+```
+
 ### And more...
 
 Create custom Toast message with completion closure.

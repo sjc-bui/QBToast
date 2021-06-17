@@ -66,12 +66,18 @@ class ViewController: UITableViewController {
   }
 
   @objc func autoRun() {
-    QBToast(message: "This is a success message.", position: .top, duration: 2.5, state: .success).showToast()
-    QBToast(message: "Consider this a warning.", position: .center, duration: 3.0, state: .warning).showToast()
-    QBToast(message: "This is an error message.", position: .center, duration: 2.0, state: .error).showToast()
-    QBToast(message: "This is a sample message.", position: .bottom, duration: 2.5).showToast()
-    QBToast(message: "This is an information message.", position: .bottom, duration: 3.5, state: .info).showToast()
-    QBToast(message: "Done...", position: .top, duration: 2.5, state: .success).showToast()
+    QBToast(message: "This is a success message.", position: .top,
+            duration: 2.5, haptic: .success, state: .success).showToast()
+    QBToast(message: "Consider this a warning.", position: .center,
+            duration: 3.0, haptic: .warning, state: .warning).showToast()
+    QBToast(message: "This is an error message.", position: .center,
+            duration: 2.0, haptic: .error, state: .error).showToast()
+    QBToast(message: "This is a sample message.", position: .bottom,
+            duration: 2.5).showToast()
+    QBToast(message: "This is an information message.", position: .bottom,
+            duration: 3.5, haptic: .light, state: .info).showToast()
+    QBToast(message: "Done...", position: .top,
+            duration: 2.5, haptic: .medium, state: .success).showToast()
   }
 
   @objc func setMessage() {

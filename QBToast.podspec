@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'QBToast'
-  s.version          = '0.1.7'
+  s.version          = '0.1.8'
   s.summary          = 'Toast message for iOS'
 
   s.description      = <<-DESC

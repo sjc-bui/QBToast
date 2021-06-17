@@ -1,5 +1,5 @@
 PODS:
-  - QBToast (0.1.4)
+  - QBToast (0.1.7)
 
 DEPENDENCIES:
   - QBToast (from `../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  QBToast: a29a5b9fc270dd48901af0464e989b29d291475a
+  QBToast: dbe683c4d5b0cb0fd3df6503641e6f5cfba216bd
 
 PODFILE CHECKSUM: 16a0c1e099aaae5db9d71d24aebbaca48f7a7c20
 
