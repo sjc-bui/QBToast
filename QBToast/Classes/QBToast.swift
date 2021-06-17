@@ -269,7 +269,8 @@ public final class QBToast: UIViewController {
         if let toastPosition = QBToastPosition(rawValue: position.intValue),
            let hapticType = QBToastHaptic(rawValue: haptic.intValue) {
           self.queue.removeObject(at: 0)
-          self.show(toast: nextToast, duration: duration.doubleValue, position: toastPosition, haptic: hapticType, window: window)
+          self.show(toast: nextToast, duration: duration.doubleValue,
+                    position: toastPosition, haptic: hapticType, window: window)
         }
       }
     }
