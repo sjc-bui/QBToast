@@ -225,8 +225,8 @@ public final class QBToast: UIViewController {
          .cancelled:
       UIView.animate(withDuration: 0.25,
                      delay: 0.0,
-                     usingSpringWithDamping: 1.0,
-                     initialSpringVelocity: 0.0,
+                     usingSpringWithDamping: 0.45,
+                     initialSpringVelocity: 10.0,
                      options: .curveLinear) {
         toast.center = self.originalPoint
       } completion: { [weak self] success in
@@ -255,7 +255,7 @@ public final class QBToast: UIViewController {
     }
 
     UIView.animate(withDuration: 0.11, delay: 0.0, options: .curveEaseOut) {
-      toast.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+      toast.transform = CGAffineTransform(scaleX: 0.45, y: 0.45)
       toast.alpha = 0
     } completion: { _ in
       self.activeToasts.remove(toast)
