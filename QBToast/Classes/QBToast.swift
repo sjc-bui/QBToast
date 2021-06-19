@@ -266,12 +266,11 @@ public final class QBToast: UIViewController {
          let position = objc_getAssociatedObject(nextToast, &QBToastKey.position) as? NSNumber,
          let duration = objc_getAssociatedObject(nextToast, &QBToastKey.duration) as? NSNumber,
          let haptic   = objc_getAssociatedObject(nextToast, &QBToastKey.haptic)   as? NSNumber {
-        if let toastPosition = QBToastPosition(rawValue: position.intValue),
-           let hapticType = QBToastHaptic(rawValue: haptic.intValue) {
-          self.queue.removeObject(at: 0)
-          self.show(toast: nextToast, duration: duration.doubleValue,
-                    position: toastPosition, haptic: hapticType, window: window)
-        }
+        let toastPosition = QBToastPosition[position.intValue]
+        let hapticType    = QBToastHaptic[haptic.intValue]
+        self.queue.removeObject(at: 0)
+        self.show(toast: nextToast, duration: duration.doubleValue,
+                  position: toastPosition, haptic: hapticType, window: window)
       }
     }
   }
@@ -334,6 +333,10 @@ public enum QBToastHaptic: Int {
       break;
     }
     #endif
+  }
+
+  static subscript(index: Int) -> QBToastHaptic {
+    return QBToastHaptic(rawValue: index)!
   }
 }
 
@@ -464,6 +467,10 @@ public enum QBToastPosition: Int, CaseIterable {
       return CGPoint(x: view.bounds.size.width / 2,
                      y: view.bounds.size.height - (toast.frame.size.height / 2) - bottomPadding)
     }
+  }
+
+  static subscript(index: Int) -> QBToastPosition {
+    return QBToastPosition(rawValue: index)!
   }
 }
 
