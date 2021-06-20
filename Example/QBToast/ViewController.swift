@@ -11,7 +11,6 @@ import QBToast
 
 class ViewController: UITableViewController {
 
-  var btn: UIButton?
   let durations: [TimeInterval] = [1.0, 1.5, 2.0, 3.0, 4.0]
   let basic: [String] = ["Top", "Center", "Bottom"]
   var states: [String] = []
